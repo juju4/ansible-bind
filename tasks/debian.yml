@@ -11,6 +11,7 @@
     - libcrypt-openssl-random-perl
     - ldnsutils
     - wget
+    - unzip
     - resolvconf
 
 - include: resolvconf.yml

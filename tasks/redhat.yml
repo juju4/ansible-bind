@@ -9,6 +9,7 @@
     - bind-utils
     - wget
     - unzip
+    - net-tools
 
 ## necessary for 'named-checkconf -t /var/named/chroot/ /etc/named.conf'
 - name: yum | copy file in chroot

@@ -1,6 +1,18 @@
 ---
 
-- name: ensure resolv.conf has localhost resolver
+- debug: var=ansible_all_ipv4_addresses
+- name: check network config
+  command: "ifconfig -a"
+  register: ifconfig
+  changed_when: false
+- debug: var=ifconfig.stdout_lines
+- name: check network config 2
+  command: "ls -al /etc/sysconfig/network-scripts/"
+  register: netdir
+  changed_when: false
+- debug: var=netdir.stdout_lines
+
+- name: ensure ifcfg-eth0 has localhost resolver
   blockinfile:
     dest: /etc/sysconfig/network-scripts/ifcfg-eth0
     block: |
