@@ -12,4 +12,6 @@
   notify:
     - restart resolvconf
   when: resolvconfhead.stat.exists
+## just for travis (sic)
+  ignore_errors: true
  
