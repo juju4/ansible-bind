@@ -1,9 +1,15 @@
 ---
 
-- name: ensure resolvconf base as localhost resolver
+- name: check if file exists
+  stat: path=/etc/resolvconf/resolv.conf.d/head
+  register: resolvconfhead
+
+## FIXME! lineinfile module exception on xenial/travis: https://travis-ci.org/juju4/ansible-bind/jobs/179332031#L2795
+- name: ensure resolvconf head as localhost resolver
   lineinfile:
     dest: /etc/resolvconf/resolv.conf.d/head
     line: 'nameserver 127.0.0.1'
   notify:
     - restart resolvconf
+  when: resolvconfhead.stat.exists
  
