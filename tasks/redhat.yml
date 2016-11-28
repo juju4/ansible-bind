@@ -4,12 +4,7 @@
 
 - name: yum | Install bind
   yum: name={{item}} state=present update_cache=yes
-  with_items:
-    - bind-chroot
-    - bind-utils
-    - wget
-    - unzip
-    - net-tools
+  with_items: "{{ bind_pkgs }}"
 
 ## necessary for 'named-checkconf -t /var/named/chroot/ /etc/named.conf'
 - name: yum | copy file in chroot

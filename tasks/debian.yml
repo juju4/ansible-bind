@@ -2,17 +2,7 @@
 
 - name: apt | Install bind9
   apt: name={{item}} state=present update_cache=yes
-  with_items:
-    - bind9
-    - dnsutils
-    - dnssec-tools
-    - libnet-dns-sec-perl
-    - libmailtools-perl
-    - libcrypt-openssl-random-perl
-    - ldnsutils
-    - wget
-    - unzip
-    - resolvconf
+  with_items: "{{ bind_pkgs }}"
 
 - include: resolvconf.yml
 

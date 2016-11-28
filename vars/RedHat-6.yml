@@ -1,5 +1,12 @@
 ---
 
+bind_pkgs:
+    - bind-chroot
+    - bind-utils
+    - wget
+    - unzip
+    - net-tools
+
 bind_svc: named-chroot
 bind_user: named
 bind_etc: /var/named/chroot/etc
