@@ -1,0 +1,65 @@
+; example from Response Policy Zone History, Usage and Research, Hugo M. Connery, Technical University of Denmark, 2013
+
+$TTL 	86400
+;@		IN SOA 	@	root (
+@            IN    SOA  localhost. root.localhost.  (
+					2016010101	; serial
+					3H		; refresh
+					15M		; retry
+					1W		; expiry
+					1D )		; minimum
+		IN NS		LOCALHOST.
+
+; Our locally configured nasty domains
+; The first record is a local test case. A non-existent domain to
+; be used for testing RPZ.
+; Note: those 2 entries are not working. other yes
+;nastynasty.com			IN CNAME	rpz-drop.
+;*.nastynasty.com		IN CNAME	rpz-drop.
+;nastynasty.com			CNAME	.
+nastynasty.com			A	{{ bind_sinkhole_ipv4 }}
+
+;; from https://lists.isc.org/pipermail/bind-users/2011-November/085876.html
+; eric ziegast suggestions
+;11.156.21.46.32.rpz-ip		CNAME *.
+;96.177.58.207.32.rpz-ip		CNAME *.
+
+; pedro bueno suggestions
+;14.53.199.94.32.rpz-ip		CNAME *.
+
+; android market scammer
+;softthrifty.com			CNAME	.
+;*.softthrifty.com		CNAME	.
+softthrifty.com			A       {{ bind_sinkhole_ipv4 }}
+*.softthrifty.com		A       {{ bind_sinkhole_ipv4 }}
+
+; spam houses
+;*.verticalresponse.com		CNAME	.
+*.verticalresponse.com		A       {{ bind_sinkhole_ipv4 }}
+
+; imports
+;$INCLUDE "drop/drop.inc"
+;$INCLUDE "drop/bogons.inc"
+
+; examples:
+; return NXDOMAIN
+;www.yahoo.com       		CNAME    .
+; return no data
+;weather.yahoo.com   		CNAME    *.
+; return www.google.com
+;stocks.yahoo.com    		CNAME    www.google.com.
+; return configured address
+;ad.yahoo.com        		A    127.0.0.1
+;ad.yahoo.com        		A    {{ bind_sinkhole_ipv4 }}
+
+; Bad TLDs
+;	https://www.spamhaus.org/statistics/tlds/
+;	https://www.bluecoat.com/company/press-releases/blue-coat-reveals-webs-shadiest-neighborhoods
+;*.science			CNAME	.
+{% if bind_blackhole_tld is defined and bind_blackhole_tld != [] %}
+{% for tld in bind_blackhole_tld %}
+*.{{ tld }} 			A 	{{ bind_sinkhole_ipv4 }}
+*.{{ tld }} 			AAAA 	{{ bind_sinkhole_ipv6 }}
+{% endfor %}
+{% endif %}
+

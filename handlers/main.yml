@@ -1,0 +1,8 @@
+---
+
+- name: restart bind
+  service: name={{ bind_svc }} state=restarted
+
+- name: restart resolvconf
+  service: name=resolvconf state=restarted
+

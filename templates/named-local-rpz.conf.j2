@@ -1,0 +1,14 @@
+// The locally defined rpz zones
+
+zone "whitelist.rpz" {
+    type master;
+    file "{{ bind_etc }}/local-whitelist.rpz.zone";
+    allow-query { clients; };
+};
+
+zone "local.rpz" {
+    type master;
+    file "{{ bind_etc }}/local.rpz.zone";
+    allow-query { clients; };
+};
+

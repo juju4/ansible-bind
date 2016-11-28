@@ -1,0 +1,9 @@
+---
+
+bind_svc: named-chroot
+bind_user: named
+bind_etc: /var/named/chroot/etc
+bind_log: /var/named/chroot/var/log
+bind_conf: /var/named/chroot/etc/named.conf
+bind_confoptions: /var/named/chroot/etc/named.conf
+

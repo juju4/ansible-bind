@@ -1,0 +1,24 @@
+---
+
+- block:
+    - name: debian | disable ipv6
+      replace:
+        dest: /etc/default/bind9
+        regexp: '^OPTIONS="-u bind'
+        replace: 'OPTIONS="-4 -u bind'
+        backup: yes
+      notify:
+        - restart bind
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- block:
+    - name: redhat | disable ipv6
+      replace:
+        dest: /etc/sysconfig/named
+        regexp: '^OPTIONS=""'
+        replace: 'OPTIONS="-4"'
+        backup: yes
+      notify:
+        - restart bind
+  when: ansible_os_family == "RedHat" or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+

@@ -1,0 +1,25 @@
+
+* block any request?
+http://www.darkreading.com/cloud/poorly-configured-dnssec---potential-ddos-weapon/d/d-id/1326643
+https://serverfault.com/questions/744613/block-any-request-in-bind
+https://lists.isc.org/pipermail/bind-users/2012-July/088220.html
+	no easy way, go iptables rate-limit
+
+http://www.mill-yard.com/2013/07/centos-bind-blocking-dns-reflection-or-amplification-ddos-attacks-using-recursive-dns-lookups/
+
+options {
+[other already entered options settings]
+...
+allow-query {any;};	
+recursion no;	
+additional-from-auth no; 	
+additional-from-cache no;	
+version "MYOB";
+rate-limit { responses-per-second 10; window 5;	};
+};
+
+iptables -A OUTPUT -p udp --source-port 53 -m string --algo kmp --from 30 --to 31 --hex-string \"|8105|\" -j DROP
+
+https://isc.sans.edu/diary/DNS+queries+for+/5713
+http://www.cymru.com/Documents/secure-bind-template.html
+

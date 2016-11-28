@@ -1,0 +1,53 @@
+---
+## for haveged (better entropy for gpg)
+#- include: redhat-epel.yml
+
+- name: yum | Install bind
+  yum: name={{item}} state=present update_cache=yes
+  with_items:
+    - bind-chroot
+    - bind-utils
+    - wget
+
+## necessary for 'named-checkconf -t /var/named/chroot/ /etc/named.conf'
+- name: yum | copy file in chroot
+  copy: "src={{ item.s }} dest={{ item.d }} remote_src=yes mode=0640 group={{ bind_user }}"
+  with_items:
+    - { s: /etc/named.rfc1912.zones, d: "{{ bind_etc }}/named.rfc1912.zones" }
+    - { s: /etc/named.root.key, d: "{{ bind_etc }}/named.root.key" }
+#    - { s: /var/named/named.ca, d: /var/named/chroot/var/named }
+    - { s: /var/named/named.ca, d: "{{ bind_etc }}" }
+    - { s: /var/named/named.localhost, d: /var/named/chroot/var/named }
+    - { s: /var/named/named.loopback, d: /var/named/chroot/var/named }
+    - { s: /var/named/named.empty, d: /var/named/chroot/var/named }
+
+- name: ensure conf working in/out of chroot
+  file: src=/ dest=/var/named/chroot/var/named/chroot state=link
+
+- name: ensure named-chroot required directories exist
+  file: dest={{ item }} state=directory owner=named group=named mode=0755
+  with_items:
+    - /var/named/chroot/var/named/dynamic
+    - /var/named/chroot/var/named/data
+
+- name: ensure named service is disable - using named-chroot
+  service: name=named state=stopped enabled=no
+
+## http://kb.odin.com/en/120844
+## mknod: ‘/var/named/chroot/dev/random’: Operation not permitted
+#- name: create entropy source inside chroot to avoid warning
+#  command: "mknod /var/named/chroot/dev/random c 1 8 creates=/var/named/chroot/dev/random"
+
+## v2.1: "msg": "Could not replace file: /root/.ansible/tmp/ansible-tmp-1478799732.5-179348823692735/source to /var/named/chroot/etc/named.conf: [Errno 16] Device or resource busy"}
+## FIXME! ansible v2.2: "module_stderr": "Traceback (most recent call last):\n  File \"/tmp/ansible_ypcZMB/ansible_module_copy.py\", line 364, in <module>\n    main()\n  File \"/tmp/ansible_ypcZMB/ansible_module_copy.py\", line 343, in main\n    module.atomic_move(b_mysrc, dest, unsafe_writes=module.params['unsafe_writes'])\n  File \"/tmp/ansible_ypcZMB/ansible_modlib.zip/ansible/module_utils/basic.py\", line 2001, in atomic_move\nNameError: global name 'exception' is not defined\n",
+- name: redhat | update default configuration
+  template:
+     src: named-rhel.conf.j2
+     dest: "{{ bind_etc }}/named.conf"
+     mode: 0640
+     owner: root
+     group: "{{ bind_user }}"
+     backup: yes
+  notify:
+    - restart bind
+

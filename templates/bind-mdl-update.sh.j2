@@ -1,0 +1,18 @@
+#!/bin/sh
+## download and install malware domains list as DNZ blackholed domains
+
+export PATH=/bin:/usr/bin:/usr/sbin
+umask 022
+
+out={{ bind_etc }}/spywaredomains.zones.zip
+cd {{ bind_etc }}
+wget -q -O $out http://malware-domains.com/files/spywaredomains.zones.zip
+[ -f {{ bind_etc }}/spywaredomains.zones ] &&  mv {{ bind_etc }}/spywaredomains.zones {{ bind_etc }}/spywaredomains.zones.0
+[ -s $out ] && unzip -q $out \
+	&& perl -pi -e 's@/etc/namedb@{{ bind_etc }}@;' {{ bind_etc }}/spywaredomains.zones \
+{% if ansible_os_family == "RedHat" %}
+	&& named-checkconf -t {{ bind_etc }}/.. /etc/named.conf
+{# if ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' #}
+{% else %}
+	&& named-checkconf {{ bind_etc }}/named.conf
+{% endif %}

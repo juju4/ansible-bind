@@ -1,0 +1,11 @@
+// The locally defined rpz zone
+zone "rpz.spamhaus.org" in
+{
+	type slave;
+	masters {
+		// redacted: spamhaus rpz DNS (payed service)
+	};
+	file "rpz.spamhaus.org.zone";
+	allow-query { clients; };
+};
+

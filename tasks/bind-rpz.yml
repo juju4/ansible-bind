@@ -1,0 +1,47 @@
+---
+
+- name: add local rpz zone
+  template:
+    src: named-local-rpz.conf.j2
+    dest: "{{ bind_etc }}/named-local-rpz.conf"
+    mode: 0644
+
+- name: add local rpz zone
+  template:
+    src: "{{ bind_rpz_blocklist_template }}"
+    dest: "{{ bind_etc }}/local.rpz.zone"
+    mode: 0644
+
+- name: add local whitelist rpz zone
+  template:
+    src: "{{ bind_rpz_whitelist_template }}"
+    dest: "{{ bind_etc }}/local-whitelist.rpz.zone"
+    mode: 0644
+
+- name: add rpz response policy in local configuration
+  blockinfile:
+    dest: "{{ bind_etc }}/named.conf.local"
+    marker: '// {mark} ANSIBLE MANAGED BLOCK: rpz zone'
+    block: |
+       acl clients { 
+           127.0.0.0/8;
+           192.168.0.0/16;
+           172.16.0.0/12;
+           10.0.0.0/8;
+           ::1;
+       };
+       include "{{ bind_etc }}/named-local-rpz.conf";
+       //include "{{ bind_etc }}/named-spamhaus-rpz.conf";	// paid service
+
+  notify:
+    - restart bind
+
+# https://github.com/benjimons/sinkholeupdate, python script ?
+# http://handlers.dshield.org/gbruneau/sinkhole.htm, shell script?
+# http://www.malwaredomains.com/?page_id=66
+# https://gist.github.com/c0psrul3/be6ff5722f7d6a3d7cf4
+# https://www.redpill-linpro.com/sysadvent//2015/12/15/rpz-malware-detection.html
+# https://dnsrpz.info/
+# http://unix.stackexchange.com/questions/268356/dns-server-for-blacklisting-tons-of-domains-and-also-some-tlds
+# https://github.com/MISP/MISP/issues/485
+# https://lists.isc.org/pipermail/bind-users/2011-November/085876.html

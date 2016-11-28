@@ -1,0 +1,53 @@
+---
+
+bind_version: "Don't know..."
+
+bind_listen_ipv4:
+  - 127.0.0.1
+bind_listen_ipv6:
+  - ::1
+
+bind_zones:
+  - zone: example.com
+    template: slave-ns-nokey
+
+bind_dns_forwarders: [ '8.8.8.8', '8.8.4.4' ]
+bind_dnssec_validation: yes
+#bind_dnssec_validation: auto
+bind_nameservers: []
+bind_dns_authoritative: true
+
+bind_authoritative_domain: example.com
+
+bind_logging_versions: 5
+bind_logging_size: 25m
+
+bind_rpz: true
+bind_rpz_blocklist_template: local.rpz.j2
+bind_rpz_whitelist_template: local-whitelist.rpz.j2
+
+bind_disable_ipv6: true
+
+bind_malwaredomainslist_blackhole: true
+bind_sinkhole_ipv4: 10.0.0.1
+#bind_sinkhole_ipv4: 127.0.0.1
+bind_sinkhole_ipv6: ::1
+bind_blackhole_tld:
+  - science
+  - top
+  - gdn
+  - download
+  - accountant
+  - trade 
+  - biz
+  - bid
+  - link
+  - zip
+  - review
+  - country
+  - kim
+  - cricket
+  - work
+  - party
+  - gq
+

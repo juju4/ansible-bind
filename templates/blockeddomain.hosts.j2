@@ -1,0 +1,17 @@
+; This zone will redirect all requests back to the blackhole itself.
+
+$TTL    86400   ; one day
+
+@            IN    SOA  localhost. root.localhost.  (
+;@       IN      SOA     bhdns.mydomain.ca. bhdns.mydomain.ca. (
+                          1
+                          28800   ; refresh  8 hours
+                          7200    ; retry    2 hours
+                          864000  ; expire  10 days
+                          86400 ) ; min ttl  1 day
+;                  NS      bhdns.mydomain.ca.
+                   NS      localhost.
+
+                   A       {{ bind_sinkhole_ipv4 }}
+
+*            IN    A       {{ bind_sinkhole_ipv4 }}

@@ -1,0 +1,128 @@
+---
+## http://www.cymru.com/Documents/secure-bind-template.html
+## FIXME! views not implemented
+
+- name: ensure log directory exists
+  file: dest="{{ bind_log }}" state=directory mode=0755 owner="{{ bind_user }}"
+
+#- name: ensure good secure settings in local configuration options
+#  blockinfile:
+#    dest: "{{ bind_etc }}/named.conf.options"
+#    marker: '// {mark} ANSIBLE MANAGED BLOCK: team-cymru template'
+#    block: |
+#
+#             statistics-file "{{ bind_log }}/named.stats";
+#             memstatistics-file "{{ bind_log }}/named.memstats";
+#             dump-file "{{ bind_log }}/named.dump";
+#             zone-statistics yes;
+#         
+#             // Prevent DoS attacks by generating bogus zone transfer
+#             // requests.  This will result in slower updates to the
+#             // slave servers (e.g. they will await the poll interval
+#             // before checking for updates).
+#             notify no;
+#         
+#                     // Generate more efficient zone transfers.  This will place
+#             // multiple DNS records in a DNS message, instead of one per
+#             // DNS message.
+#             transfer-format many-answers;
+#         
+#             // Set the maximum zone transfer time to something more
+#             // reasonable.  In this case, we state that any zone transfer
+#             // that takes longer than 60 minutes is unlikely to ever
+#             // complete.  WARNING:  If you have very large zone files,
+#             // adjust this to fit your requirements.
+#             max-transfer-time-in 60;
+#         
+#             // We have no dynamic interfaces, so BIND shouldn't need to
+#             // poll for interface state {UP|DOWN}.
+#             interface-interval 0;
+#         
+#             allow-transfer {
+#                 // Zone tranfers limited to members of the
+#                 // "xfer" ACL.
+#                 xfer;
+#             };
+#         
+#             allow-query {
+#                 // Accept queries from our "trusted" ACL.  We will
+#                 // allow anyone to query our master zones below.
+#                 // This prevents us from becoming a free DNS server
+#                 // to the masses.
+#                 trusted;
+#             };
+#         
+#             allow-query-cache {
+#                 // Accept queries of our cache from our "trusted" ACL. 
+#                 trusted;
+#             }; 
+#
+#    insertbefore: '^};'
+#  notify:
+#    - restart bind
+
+- name: ensure good secure settings in local configuration
+  blockinfile:
+    dest: "{{ bind_etc }}/named.conf.local"
+    marker: '// {mark} ANSIBLE MANAGED BLOCK: team-cymru template'
+    block: |
+
+       acl xfer { 
+           none;   // Allow no transfers.  If we have other
+            // name servers, place them here.
+           
+       }; 
+ 
+       acl "trusted" {
+           // Place our internal and DMZ subnets in here so that
+           // intranet and DMZ clients may send DNS queries.  This
+           // also prevents outside hosts from using our name server
+           // as a resolver for other domains.
+           127.0.0.0/8;
+           192.168.0.0/16;
+           172.16.0.0/12;
+           10.0.0.0/8;
+           ::1;
+           localhost; 
+       };
+
+       logging {
+       
+           channel default_syslog {
+               // Send most of the named messages to syslog.
+               syslog local2;
+               severity debug; 
+           };
+       
+           channel audit_log {
+               // Send the security related messages to a separate file.
+               file "{{ bind_log }}/named.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
+               severity debug;
+               print-time yes; 
+           };
+
+           channel named-rpz {
+               file "{{ bind_log }}/rpz.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
+               severity info;
+           };
+       
+           category default { default_syslog; };
+           category general { default_syslog; };
+           category security { audit_log; default_syslog; };
+           category config { default_syslog; };
+           category resolver { audit_log; };
+           category xfer-in { audit_log; };
+           category xfer-out { audit_log; };
+           category notify { audit_log; };
+           category client { audit_log; };
+           category network { audit_log; };
+           category update { audit_log; };
+           category queries { audit_log; };
+           category lame-servers { audit_log; }; 
+           category rpz { named-rpz; };
+       };
+
+    create: yes
+  notify:
+    - restart bind
+
