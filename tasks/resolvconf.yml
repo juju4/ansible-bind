@@ -11,7 +11,7 @@
     line: 'nameserver 127.0.0.1'
   notify:
     - restart resolvconf
-  when: resolvconfhead.stat.exists
+  when: resolvconfhead.stat.exists and ansible_env['TRAVIS'] is not defined
 ## just for travis (sic)
   ignore_errors: true
  
