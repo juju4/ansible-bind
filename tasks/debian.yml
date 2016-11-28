@@ -10,6 +10,8 @@
     - libmailtools-perl
     - libcrypt-openssl-random-perl
     - ldnsutils
+    - wget
+    - resolvconf
 
 - include: resolvconf.yml
 
