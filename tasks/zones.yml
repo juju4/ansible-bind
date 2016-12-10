@@ -1,0 +1,57 @@
+---
+## inspired from https://www.sbarjatiya.com/notes_wiki/index.php/Ansible_named-server_role_for_both_public_and_private_DNS
+##      https://github.com/bertvv/ansible-role-bind/tree/master
+
+- name: Create zone forward files
+  template:
+    src: "forward.zone.j2"
+    dest: "{{ bind_etc }}/db.{{item}}.zone"
+    owner: root
+    group: "{{ bind_user }}"
+    mode: '0644'
+    backup: yes
+    validate: "named-checkzone {{ item }} %s"
+  with_items:
+    - "{{ zone.vars.bind_zone_name }}"
+  notify:
+    - restart bind
+
+- name: Create reverse zone files
+  template:
+    src: "reverse.zone.j2"
+#    dest: "{{ bind_etc }}/db.rev.{{item|reverse_lookup_zone}}.zone"
+    dest: "{{ bind_etc }}/db.rev.{{item | ipaddr('revdns') | regex_replace('^\\d+\\.', '') }}zone"
+    owner: root
+    group: "{{ bind_user }}"
+    mode: '0644'
+    backup: yes
+#    validate: "named-checkzone {{ item|reverse_lookup_zone }} %s"
+    validate: "named-checkzone {{ item | ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }} %s"
+  with_items: "{{ zone.vars.bind_zone_networks }}"
+  notify:
+    - restart bind
+
+- debug: var=zone.vars.bind_zone_name
+- name: ensure named.conf.local-zones present
+  template:
+    src: "named-zones.conf.local.j2"
+    dest: "{{ bind_etc }}/named.conf.local-zone-{{ zone.vars.bind_zone_name }}"
+    owner: root
+    group: "{{ bind_user }}"
+    mode: '0644'
+    backup: yes
+  notify:
+    - restart bind
+
+- name: add zones to named.conf.local
+  blockinfile:
+    dest: "{{ bind_etc }}/named.conf.local"
+    marker: "// {mark} ANSIBLE MANAGED BLOCK zone {{ zone.vars.bind_zone_name }}"
+    block: |
+
+       include "{{ bind_etc }}/named.conf.local-zone-{{ zone.vars.bind_zone_name }}";
+
+    create: yes
+  notify:
+    - restart bind
+

@@ -1,0 +1,28 @@
+// {{ ansible_managed }}
+// zones files
+
+zone "{{ zone.vars.bind_zone_name }}" IN {
+  type master;
+  file "{{ bind_etc }}/db.{{ zone.vars.bind_zone_name }}.zone";
+  notify yes;
+{% if zone.vars.bind_zone_also_notify|length > 0 %}
+  also-notify  { {{ zone.vars.bind_zone_also_notify|join(';') }}; };
+{% endif %}
+  allow-update { none; };
+};
+
+{% if zone.vars.bind_zone_networks is defined %}
+{% for network in zone.vars.bind_zone_networks %}
+zone "{{ network  | ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}" IN {
+  type master;
+  file "{{ bind_etc }}/db.rev.{{ network | ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}zone";
+  notify yes;
+{% if zone.vars.bind_zone_also_notify|length > 0 %}
+  also-notify  { {{ bind_zone_also_notify|join(';') }}; };
+{% endif %}
+  allow-update { none; };
+};
+{% endfor %}
+{% endif %}
+
+

@@ -1,0 +1,16 @@
+---
+
+- name: ubuntu | add few options to apparmor
+  lineinfile:
+    dest: /etc/apparmor.d/usr.sbin.named
+    regexp: "{{ item.re }}"
+    line: "{{ item.l }}"
+    insertafter: "{{ item.i }}"
+    backup: yes
+  with_items:
+    - { re: '^/var/log/bind/ rw,', l: '/var/log/bind/ rw,', i: '^/var/log/named/ rw,' }
+    - { re: '^/var/log/bind/\*\* rw,', l: '/var/log/bind/** rw,', i: '^/var/log/named/ rw,' }
+  notify:
+    - reload apparmor bind
+  when: not (ansible_virtualization_type is defined and (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker"))
+

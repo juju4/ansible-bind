@@ -11,6 +11,8 @@ bind_pkgs:
     - wget
     - unzip
     - resolvconf
+## only necessary on controller, but for kitchen, controller is target...
+    - python-netaddr
 
 bind_svc: bind9
 bind_user: bind

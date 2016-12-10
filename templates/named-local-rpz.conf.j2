@@ -1,3 +1,4 @@
+// {{ ansible_managed }}
 // The locally defined rpz zones
 
 zone "whitelist.rpz" {
@@ -12,3 +13,11 @@ zone "local.rpz" {
     allow-query { clients; };
 };
 
+{% if bind_misp_apikey != '' and bind_misp_url != '' %}
+zone "misp.rpz" {
+    type master;
+    file "{{ bind_etc }}/local-misp.rpz.zone";
+    allow-query { clients; };
+};
+
+{% endif %}

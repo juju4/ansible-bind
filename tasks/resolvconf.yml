@@ -5,7 +5,7 @@
   register: resolvconfhead
 
 ## FIXME! lineinfile module exception on xenial/travis: https://travis-ci.org/juju4/ansible-bind/jobs/179332031#L2795
-- name: ensure resolvconf head as localhost resolver
+- name: debian | ensure resolvconf head as localhost resolver
   lineinfile:
     dest: /etc/resolvconf/resolv.conf.d/head
     line: 'nameserver 127.0.0.1'
@@ -14,4 +14,13 @@
   when: resolvconfhead.stat.exists and ansible_env['TRAVIS'] is not defined
 ## just for travis (sic)
   ignore_errors: true
- 
+
+- name: debian | ignore dns from dhcp server
+  lineinfile:
+    dest: /etc/dhcp/dhclient.conf
+    line: 'supersede domain-name-servers 127.0.0.1'
+    insertafter: '#supersede'
+  notify:
+    - restart networking
+  when: ansible_env['TRAVIS'] is not defined
+

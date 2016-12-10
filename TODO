@@ -1,4 +1,8 @@
 
+* monitoring bind/rpz usage
+* add 'search domains' in resolvconf and resolv.conf
+
+
 * block any request?
 http://www.darkreading.com/cloud/poorly-configured-dnssec---potential-ddos-weapon/d/d-id/1326643
 https://serverfault.com/questions/744613/block-any-request-in-bind
@@ -22,4 +26,8 @@ iptables -A OUTPUT -p udp --source-port 53 -m string --algo kmp --from 30 --to 3
 
 https://isc.sans.edu/diary/DNS+queries+for+/5713
 http://www.cymru.com/Documents/secure-bind-template.html
+
+* MISP to RPZ
+OK except resolution
+FIXME! export use CNAME which is not working with pure ip (other rpz zone as A)
 

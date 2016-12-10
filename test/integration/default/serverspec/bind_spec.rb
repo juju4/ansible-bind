@@ -3,12 +3,12 @@ require 'serverspec'
 # Required by serverspec
 set :backend, :exec
 
-describe service('bind9'), :if => os[:family] == 'ubuntu' do
+describe service('bind9'), :if => os[:family] == 'ubuntu' || os[:family] == 'debian' do
   it { should be_enabled   }
   it { should be_running   }
 end  
 
-describe process('named'), :if => os[:family] == 'ubuntu' do
+describe process('named'), :if => os[:family] == 'ubuntu' || os[:family] == 'debian' do
   it { should be_running }
   its(:args) { should match /-u bind\b/ }
   it "is listening on port 53" do
@@ -29,8 +29,41 @@ describe process('named'), :if => os[:family] == 'redhat' do
   end 
 end
 
-describe command('named-checkconf -pxzj /etc/bind/named.conf'), :if => os[:family] == 'ubuntu' do
+describe file('/etc/bind/named.conf'), :if => os[:family] == 'ubuntu' || os[:family] == 'debian' do
+  it { should be_readable.by('owner') }
+  it { should be_readable.by('group') }
+  it { should be_readable.by('others') }
+  it { should be_readable.by_user('bind') }
+end
+describe file('/etc/bind/named.conf.options'), :if => os[:family] == 'ubuntu' || os[:family] == 'debian' do
+  it { should be_readable.by('owner') }
+  it { should be_readable.by('group') }
+  it { should be_readable.by('others') }
+  it { should be_readable.by_user('bind') }
+end
+describe file('/etc/bind/named.conf.local'), :if => os[:family] == 'ubuntu' || os[:family] == 'debian' do
+  it { should be_readable.by('owner') }
+  it { should be_readable.by('group') }
+  it { should be_readable.by('others') }
+  it { should be_readable.by_user('bind') }
+end
+
+describe file('/var/named/chroot/etc/named.conf'), :if => os[:family] == 'redhat' do
+  it { should be_readable.by('owner') }
+  it { should be_readable.by('group') }
+end
+describe file('/var/named/chroot/etc/named.conf.options'), :if => os[:family] == 'redhat' do
+  it { should be_readable.by('owner') }
+  it { should be_readable.by('group') }
+end
+describe file('/var/named/chroot/etc/named.conf.local'), :if => os[:family] == 'redhat' do
+  it { should be_readable.by('owner') }
+  it { should be_readable.by('group') }
+end
+
+describe command('named-checkconf -pxzj /etc/bind/named.conf'), :if => os[:family] == 'ubuntu' || os[:family] == 'debian' do
   its(:stdout) { should_not match /file not found/ }
+  its(:stdout) { should_not match /bad zone/ }
   its(:stdout) { should match /loaded serial/ }
   its(:stdout) { should match /options/ }
 ## malwaredomainslist introduce multiple zones with errors... 2 tests not working when included.

@@ -1,0 +1,67 @@
+; Zone file for {{ zone.vars.bind_zone_name }}
+; {{ ansible_managed }}
+
+$ORIGIN {{ zone.vars.bind_zone_name }}.
+$TTL {{ zone.vars.bind_zone_ttl }}
+
+{% if zone.vars.bind_zone_name_servers|length > 0 %}
+@ IN SOA {{ zone.vars.bind_zone_name_servers|first }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
+{% else %}
+@ IN SOA {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
+{% endif %}
+  {{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ ansible_date_time.hour }}
+  {{ zone.vars.bind_zone_time_to_refresh }}
+  {{ zone.vars.bind_zone_time_to_retry }}
+  {{ zone.vars.bind_zone_time_to_expire }}
+  {{ zone.vars.bind_zone_minimum_ttl }} )
+
+{% if zone.vars.bind_zone_name_servers|length > 0 %}
+{% for ns in zone.vars.bind_zone_name_servers %}
+@                    IN  NS     {{ ns }}.{{ zone.vars.bind_zone_name }}.
+{% endfor %}
+{% else %}
+@                    IN  NS     {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}.
+{% endif %}
+{% for ns in zone.vars.bind_other_name_servers %}
+@                    IN  NS     {{ ns }}.
+{% endfor %}
+
+{% for mail in zone.vars.bind_zone_mail_servers %}
+{% if loop.first %}@{% else %} {% endif %}                    IN  MX     {{ mail.preference}}  {{ mail.name }}.{{ zone.vars.bind_zone_name }}.
+{% endfor %}
+
+{% if zone.vars.bind_zone_hosts|length > 0 %}
+{% for host in zone.vars.bind_zone_hosts %}
+{% if host.ip is string %}
+{{ host.name.ljust(20) }} IN  A      {{ host.ip }}
+{% else %}
+{% for ip in host.ip %}
+{{ host.name.ljust(20) }} IN  A      {{ ip }}
+{% endfor %}
+{% endif %}
+{% if host.ipv6 is defined %}
+{% if host.ipv6 is string %}
+{{ host.name.ljust(20) }} IN  AAAA   {{ host.ipv6 }}
+{% else %}
+{% for ip6 in host.ipv6 %}
+{{ host.name.ljust(20) }} IN  AAAA   {{ ip6 }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if host.aliases is defined %}
+{% for alias in host.aliases %}
+{{ alias.ljust(20) }} IN  CNAME  {{ host.name }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% else %}
+{{ ansible_hostname.ljust(20) }} IN A     {{ ansible_default_ipv4.address }}
+{% endif %}
+{% for service in zone.vars.bind_zone_services %}
+{{ service.name.ljust(20) }} IN  SRV    {{ service.priority|default('0') }} {{ service.weight|default('0') }} {{ service.port }} {{ service.target }}
+{% endfor %}
+{% for text in zone.vars.bind_zone_text %}
+{{ text.name.ljust(20) }} IN  TXT    "{{ text.text }}"
+{% endfor %}
+{# vim: ft=text
+#}

@@ -1,3 +1,4 @@
+// {{ ansible_managed }}
 // named.conf.options
 options {
 {% if ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' %}
@@ -23,14 +24,18 @@ options {
 {% endfor %}
         };
 {% endif %}
-	//query-source port 53;
+{% if bind_dns_forward_only %}
+        forward only;
+{% endif %}
+
+        //query-source port 53;
 
         //========================================================================
         // If BIND logs error messages about the root key being expired,
         // you will need to update your keys.  See https://www.isc.org/bind-keys
         //========================================================================
         dnssec-enable yes;
-        dnssec-validation {{ bind_dnssec_validation }};
+        dnssec-validation {{ bind_dnssec_validation | lower }};
         dnssec-lookaside auto;
 
         auth-nxdomain no;    # conform to RFC1035
@@ -63,6 +68,7 @@ options {
            attacks. Implementing BCP38 within your network would greatly
            reduce such attack surface 
         */
+{# FIXME! probably better to disable if server is external/opened #}
         recursion yes;
 
         /* Path to ISC DLV key */
@@ -122,6 +128,9 @@ options {
         response-policy {
             zone "whitelist.rpz" policy PASSTHRU;
             zone "local.rpz";
+{% if bind_misp_apikey != '' and bind_misp_url != '' %}
+            zone "misp.rpz";
+{% endif %}
             //zone "rpz.spamhaus.org" policy CNAME warning.domain.org;
         };
 

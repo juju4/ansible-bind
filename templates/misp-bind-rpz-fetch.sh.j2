@@ -1,0 +1,22 @@
+#!/bin/sh
+## {{ ansible_managed }}
+## retrieve MISP indicators in bro format
+
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+umask 077
+
+userkey={{ bind_misp_apikey }}
+misp_base_url={{ bind_misp_url }}
+dest={{ bind_etc }}/local-misp.rpz.zone
+
+## FIXME! got {"name":"Invalid event ID format.","message":"Invalid event ID format.","url":"\/attributes\/rpz\/download"}
+##      Ok with web UI: export: generate+download file
+[ -f $dest ] && mv $dest $dest.old
+curl -s -X POST -H "Authorization: $userkey" -H 'Content-Type: application/json' -H 'Accept: application/json' -d '{{ bind_misp_rpz_json_req }}' "$misp_base_url/attributes/rpz/download" > $dest
+
+{% if ansible_service_mgr == "systemd" %}
+systemctl restart {{ bind_svc }}
+{% else %}
+service {{ bind_svc }} restart
+{% endif %}
+

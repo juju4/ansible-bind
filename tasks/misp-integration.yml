@@ -1,0 +1,25 @@
+---
+
+- name: install misp update script
+  template:
+    src: misp-bind-rpz-fetch.sh.j2
+    dest: /usr/local/bin/misp-bind-rpz-fetch.sh
+## contains MISP api key!!!
+    mode: '0700'
+
+- name: run misp-bind-rpz-fetch.sh once
+  command: "/usr/local/bin/misp-bind-rpz-fetch.sh creates={{ bind_etc }}/misp.rpz"
+  ignore_errors: true
+
+- name: check rpz retrieve is correct
+  command: "head -1 {{ bind_etc }}/misp.rpz"
+  register: misprpz
+  changed_when: false
+  ignore_errors: true
+- debug: msg="Error in MISP RPZ fetch! need to check MISP user account matching the key!"
+  when: "'Your user account is expecting a password change' in misprpz.stdout or 'Invalid event ID format' in misprpz.stdout"
+
+- cron: name="misp2bind refresh" minute=12 hour=12
+    user="root" job="/usr/local/bin/misp-bind-rpz-fetch.sh"
+    cron_file=ansible_misp2bind-refresh
+

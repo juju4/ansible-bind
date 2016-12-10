@@ -3,10 +3,13 @@
 
 Ansible role to setup Bind/Named DNS server with sane secure default.
 Including
+* Secure template from Team Cymru template (http://www.cymru.com/Documents/secure-bind-template.html).
+Please note than separated internal/external views are not implemented currently.
 * DNSSEC for authentication,
 * RPZ to whitelist/blacklist entries
 * Malware domains list blackholed
-* Secure template from Team Cymru template (http://www.cymru.com/Documents/secure-bind-template.html)
+* Eventual integration with MISP RPZ export
+* Authoritative DNS (mostly for internal zones)
 Mostly as cache/forwarder but could be other roles.
 
 ## Requirements & Dependencies
@@ -29,7 +32,7 @@ For example
 ```
 - host: all
   roles:
-    - bind
+    - juju4.bind
 ```
 
 ## Variables
@@ -42,13 +45,13 @@ This role has a travis basic test (for github), more advanced with kitchen and a
 
 Once you ensured all necessary roles are present, You can test with:
 ```
-$ cd /path/to/roles/bind
+$ cd /path/to/roles/juju4.bind
 $ kitchen verify
 $ kitchen login
 ```
 or
 ```
-$ cd /path/to/roles/bind/test/vagrant
+$ cd /path/to/roles/juju4.bind/test/vagrant
 $ vagrant up
 $ vagrant ssh
 ```
@@ -59,4 +62,14 @@ $ vagrant ssh
 ## License
 
 BSD 2-clause
+
+## Thanks
+
+* To bertvv for his bind ansible role for authoritative DNS with nice jinja2 filters to handle reverse lookup
+https://github.com/bertvv/ansible-role-bind
+In the end, there is an existing filter to do that since 1.9 ```ipaddr('revdns')```
+https://docs.ansible.com/ansible/playbooks_filters_ipaddr.html
+One limitation, it's for not fit for zone and as such IPv6 is untested/unsupported.
+
+
 
