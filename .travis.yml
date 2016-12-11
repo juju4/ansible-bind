@@ -73,12 +73,14 @@ before_install:
 ## these lines are necessary so lxc mount is read-write, https://github.com/lxc/lxd/issues/1879
   - chmod -R go+w $PWD
 ## OR
-  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./}"
 ## FIXME! awk extraction is working in shell but not in travis... relying on global chmod as test ephemeral environment. DON'T USE IN PRODUCTION!
-  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/Hostid/ { print $13 }'"
-  - CUID=`sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/Hostid/ { print $13 }'"`
+  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./}"
+  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/idmap.next.*Hostid/ { print $11 }'"
+  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/idmap.next.*Hostid/ { print $12 }'"
+  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/idmap.next.*Hostid/ { print $13 }'"
+  - CUID=`sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/idmap.next.*Hostid/ { print $13 }'"`
   - "echo setfacl -Rm user:$CUID:rwx ${PWD%/*}"
-  - "setfacl -Rm user:$CUID:rwx ${PWD%/*}"
+  - "setfacl -Rm \"user:$CUID:rwx\" ${PWD%/*} || true"
   - sudo -E su $USER -c "lxc config device add run-${distribution}-${version//./} sharedroles disk path=/etc/ansible/roles source=${PWD%/*}"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- mount"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- pwd"
