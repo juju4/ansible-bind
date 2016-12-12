@@ -31,3 +31,7 @@ http://www.cymru.com/Documents/secure-bind-template.html
 OK except resolution
 FIXME! export use CNAME which is not working with pure ip (other rpz zone as A)
 
+
+empty-zones-enable yes;
+https://deepthought.isc.org/article/AA-00800/0/Automatic-empty-zones-including-RFC-1918-prefixes.html
+
