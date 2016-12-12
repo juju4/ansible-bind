@@ -8,9 +8,11 @@
     insertafter: "{{ item.i }}"
     backup: yes
   with_items:
-    - { re: '^/var/log/bind/ rw,', l: '/var/log/bind/ rw,', i: '^/var/log/named/ rw,' }
-    - { re: '^/var/log/bind/\*\* rw,', l: '/var/log/bind/** rw,', i: '^/var/log/named/ rw,' }
-  notify:
-    - reload apparmor bind
-  when: not (ansible_virtualization_type is defined and (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker"))
+    - { re: '^  /var/log/bind/ rw,', l: '  /var/log/bind/ rw,', i: '^  /var/log/named/ rw,' }
+    - { re: '^  /var/log/bind/\*\* rw,', l: '  /var/log/bind/** rw,', i: '^  /var/log/named/ rw,' }
+  register: apparmornamed
+
+- name: reload named apparmor
+  command: apparmor_parser -r /etc/apparmor.d/usr.sbin.named
+  when: apparmornamed.changed
 

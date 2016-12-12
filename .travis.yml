@@ -75,10 +75,10 @@ before_install:
 ## OR
 ## FIXME! awk extraction is working in shell but not in travis... relying on global chmod as test ephemeral environment. DON'T USE IN PRODUCTION!
   - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./}"
-  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/idmap.next.*Hostid/ { print $11 }'"
-  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/idmap.next.*Hostid/ { print $12 }'"
   - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/idmap.next.*Hostid/ { print $13 }'"
-  - CUID=`sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/idmap.next.*Hostid/ { print $13 }'"`
+  - sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | sed 's/.*idmap.next.*\"Hostid\":\([0-9]*\),.*/\1/'"
+#  - CUID=`sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | awk -F'[\":,]' '/idmap.next.*Hostid/ { print $13 }'"`
+  - CUID=`sudo -E su $USER -c "lxc config show run-${distribution}-${version//./} | sed 's/.*idmap.next.*\"Hostid\":\([0-9]*\),.*/\1/'"
   - "echo setfacl -Rm user:$CUID:rwx ${PWD%/*}"
   - "setfacl -Rm \"user:$CUID:rwx\" ${PWD%/*} || true"
   - sudo -E su $USER -c "lxc config device add run-${distribution}-${version//./} sharedroles disk path=/etc/ansible/roles source=${PWD%/*}"
@@ -92,7 +92,7 @@ script:
 ## FIXME! Travis request: Build config file had a parse error: "mapping values are not allowed in this context at line 72 column 321".
 #  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ansible-playbook -i inventory /etc/ansible/roles/juju4.bind/test/integration/default/default.yml --connection=local --sudo | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 1)"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ansible-playbook -i inventory --connection=local --sudo /etc/ansible/roles/juju4.bind/test/integration/default/default.yml" > /tmp/idempotency.log
-  - "grep -q 'changed=0.*failed=0' /tmp/idempotency.log && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 1)"
+  - "grep -q 'changed=0.*failed=0' /tmp/idempotency.log && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)"
 
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- time sh -x /etc/ansible/roles/juju4.bind/test/integration/default/serverspec/run-local-tests.sh"
   - sudo -E su $USER -c "lxc stop run-${distribution}-${version//./} --force"
