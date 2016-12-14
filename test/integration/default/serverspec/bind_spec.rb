@@ -66,16 +66,18 @@ describe command('named-checkconf -pxzj /etc/bind/named.conf'), :if => os[:famil
   its(:stdout) { should_not match /bad zone/ }
   its(:stdout) { should match /loaded serial/ }
   its(:stdout) { should match /options/ }
-## malwaredomainslist introduce multiple zones with errors... 2 tests not working when included.
+## malwaredomainslist introduce multiple zones with non-fatal errors... those tests not working when included.
 #  its(:stdout) { should_not match /not loaded due to errors/ }
+#  its(:stderr) { should_not match /bad owner name/ }
 #  its(:stdout) { should match /zone "\."/ }
 end
 describe command('named-checkconf -pzj -t /var/named/chroot/ /etc/named.conf'), :if => os[:family] == 'redhat' do
   its(:stdout) { should_not match /file not found/ }
   its(:stdout) { should match /loaded serial/ }
   its(:stdout) { should match /options/ }
-## malwaredomainslist introduce multiple zones with errors... 2 tests not working when included.
+## malwaredomainslist introduce multiple zones with non-fatal errors... those tests not working when included.
 #  its(:stdout) { should_not match /not loaded due to errors/ }
+#  its(:stderr) { should_not match /bad owner name/ }
 #  its(:stdout) { should match /zone "\."/ }
 end
 
