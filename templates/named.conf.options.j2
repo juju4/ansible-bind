@@ -1,6 +1,8 @@
 // {{ ansible_managed }}
 // named.conf.options
 options {
+        version "{{ bind_version }}";
+
 {% if ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' %}
         directory "/var/cache/bind";
         statistics-file "/var/cache/bind/named.stats";

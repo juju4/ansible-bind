@@ -52,6 +52,9 @@
 ## should be at the end, else can lose dns connectivity
 - include: resolvconf2.yml
 
+- include: monitoring-nrpe.yml
+  when: bind_monitoring_nrpe is defined and bind_monitoring_nrpe
+
 - name: Ensure bind is running and enabled on boot.
   service: name={{ bind_svc }} state=started enabled=yes
 

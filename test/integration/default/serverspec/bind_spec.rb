@@ -84,6 +84,9 @@ end
 describe command('host www.google.com') do
   its(:stdout) { should match /www.google.com has address / }
 end
+describe command('dig @127.0.0.1 -c CH -t txt version.bind') do
+  its(:stdout) { should match /Don't know.../ }
+end
 describe command('named -V'), :if => os[:family] == 'ubuntu' && os[:release] == '16.04' do
   its(:stdout) { should match /--with-openssl/ }
   its(:stdout) { should match /compiled with OpenSSL version:/ }
