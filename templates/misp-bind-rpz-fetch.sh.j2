@@ -10,6 +10,8 @@ misp_base_url={{ bind_misp_url }}
 dest={{ bind_etc }}/local-misp.rpz.zone
 
 ## FIXME! got {"name":"Invalid event ID format.","message":"Invalid event ID format.","url":"\/attributes\/rpz\/download"}
+##      curl ... 'http://misp/attributes/rpz/download/OSINT/false/1999-01-01/2017-02-01/walled-garden/teamliquid.net/'
+##      {"name":"Either specify the search terms in the url, or POST a json array \/ xml (with the root element being &quot;request&quot; and specify the correct headers based on content type.","message":"Either specify the search terms in the url, or POST a json array \/ xml (with the root element being &quot;request&quot; and specify the correct headers based on content type.","url":"\/attributes\/rpz\/download\/OSINT\/false\/1999-01-01\/2017-02-01\/walled-garden\/teamliquid.net\/"}
 ##      Ok with web UI: export: generate+download file
 [ -f $dest ] && mv $dest $dest.old
 curl -s -X POST -H "Authorization: $userkey" -H 'Content-Type: application/json' -H 'Accept: application/json' -d '{{ bind_misp_rpz_json_req }}' "$misp_base_url/attributes/rpz/download" > $dest
