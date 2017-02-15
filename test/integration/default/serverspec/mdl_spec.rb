@@ -9,6 +9,7 @@ describe file('/etc/bind/spywaredomains.zones') do
   its(:content) { should match /surico.ru/ }
 end
 
+## must reflect current mdl spywaredomains...
 describe command('host surico.ru') do
   its(:stdout) { should match /has address 10.0.0.1/ }
 end
