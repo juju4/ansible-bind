@@ -12,7 +12,7 @@ env:
 #    version: 7
   - distribution: ubuntu
     version: 16.04
-## FIXME! travis stalling after 10min...
+## FIXME! travis stalling after 10min... between the 2 ansible play run
 #  - distribution: ubuntu
 #    version: 14.04
 #  - distribution: ubuntu
