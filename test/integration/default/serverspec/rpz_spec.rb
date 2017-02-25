@@ -23,7 +23,7 @@ describe command('host softthrifty.com') do
   its(:stdout) { should match /has address 10.0.0.1/ }
 end
 describe command('dig -t a +short softthrifty.com @127.0.01') do
-  its(:stdout) { should match /has address 10.0.0.1/ }
+  its(:stdout) { should match /10.0.0.1/ }
 end
 describe command('host 32.46.21.156') do
   its(:stdout) { should match /not found: 3\(NXDOMAIN\)/ }
