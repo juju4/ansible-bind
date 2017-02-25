@@ -10,7 +10,7 @@ describe file('/etc/bind/spywaredomains.zones'), :if => os[:family] == 'ubuntu' 
 end
 describe file('/var/named/chroot/etc/spywaredomains.zones'), :if => os[:family] == 'redhat' do
   its(:content) { should match /Please visit www.malwaredomains.com for more information and to report/ }
-  its(:content) { should match /{type master; file "\/etc\/bind\/blockeddomain.hosts";};/ }
+  its(:content) { should match /{type master; file "\/var\/named\/chroot\/etc\/blockeddomain.hosts";};/ }
   its(:content) { should match /surico.ru/ }
 end
 
