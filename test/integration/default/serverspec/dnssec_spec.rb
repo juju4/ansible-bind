@@ -40,7 +40,7 @@ end
 ## https://users.isc.org/~jreed/dnssec-guide/dnssec-guide.html
 
 describe command('dig www.isc.org. A +dnssec +multiline') do
-  its(:stdout) { should match /ad/ }
+#  its(:stdout) { should match /ad/ }
   its(:stdout) { should match /flags: do/ }
   its(:stdout) { should match /RRSIG/ }
 end
