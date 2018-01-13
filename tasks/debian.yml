@@ -7,4 +7,4 @@
 - include: bind-apparmor.yml
 
 - include: resolvconf.yml
-
+  when: not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")

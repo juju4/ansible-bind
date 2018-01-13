@@ -51,6 +51,7 @@
 #- meta: flush_handlers
 ## should be at the end, else can lose dns connectivity
 - include: resolvconf2.yml
+  when: not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")
 
 - include: monitoring-nrpe.yml
   when: bind_monitoring_nrpe is defined and bind_monitoring_nrpe
