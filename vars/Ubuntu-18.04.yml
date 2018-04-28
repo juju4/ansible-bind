@@ -3,7 +3,7 @@
 bind_pkgs:
     - bind9
     - dnsutils
-    - dnssec-tools
+#    - dnssec-tools
     - libnet-dns-sec-perl
     - libmailtools-perl
     - libcrypt-openssl-random-perl
