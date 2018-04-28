@@ -87,11 +87,15 @@ end
 describe command('dig @127.0.0.1 -c CH -t txt version.bind') do
   its(:stdout) { should match /Don't know.../ }
 end
+describe command('named -V'), :if => os[:family] == 'ubuntu' && os[:release] == '18.04' do
+  its(:stdout) { should match /--with-openssl/ }
+  its(:stdout) { should match /linked to OpenSSL version:/ }
+end
 describe command('named -V'), :if => os[:family] == 'ubuntu' && os[:release] == '16.04' do
   its(:stdout) { should match /--with-openssl/ }
   its(:stdout) { should match /compiled with OpenSSL version:/ }
 end
-describe command('named -V'), :if => os[:family] != 'ubuntu' || os[:release] != '16.04' do
+describe command('named -V'), :if => os[:family] != 'ubuntu' || os[:release] == '14.04' do
   its(:stdout) { should match /using OpenSSL version/ }
 end
 
