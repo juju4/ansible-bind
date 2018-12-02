@@ -1,3 +1,4 @@
+---
 
 - name: Ensure nrpe.d dir exists
   file: dest=/etc/nagios/nrpe.d state=directory mode=0755

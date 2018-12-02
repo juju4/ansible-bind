@@ -80,4 +80,3 @@
     group: "{{ bind_user }}"
   notify:
     - restart bind
-
