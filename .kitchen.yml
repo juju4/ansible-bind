@@ -58,5 +58,3 @@ suites:
       ansible_version: 2.0.0.2
       name: ansible_playbook
       playbook: test/integration/default/default.yml
-
-

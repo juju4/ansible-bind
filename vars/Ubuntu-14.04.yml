@@ -20,4 +20,3 @@ bind_etc: /etc/bind
 bind_log: /var/log/bind
 bind_conf: /etc/bind/named.conf
 bind_confoptions: /etc/bind/named.conf.options
-

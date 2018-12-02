@@ -3,7 +3,7 @@
 #- include: redhat-epel.yml
 
 - name: yum | Install bind
-  yum: name={{item}} state=present update_cache=yes
+  yum: name={{ item }} state=present update_cache=yes
   with_items: "{{ bind_pkgs }}"
 
 ## necessary for 'named-checkconf -t /var/named/chroot/ /etc/named.conf'
@@ -35,8 +35,6 @@
 #- name: create entropy source inside chroot to avoid warning
 #  command: "mknod /var/named/chroot/dev/random c 1 8 creates=/var/named/chroot/dev/random"
 
-## v2.1: "msg": "Could not replace file: /root/.ansible/tmp/ansible-tmp-1478799732.5-179348823692735/source to /var/named/chroot/etc/named.conf: [Errno 16] Device or resource busy"}
-## FIXME! ansible v2.2: "module_stderr": "Traceback (most recent call last):\n  File \"/tmp/ansible_ypcZMB/ansible_module_copy.py\", line 364, in <module>\n    main()\n  File \"/tmp/ansible_ypcZMB/ansible_module_copy.py\", line 343, in main\n    module.atomic_move(b_mysrc, dest, unsafe_writes=module.params['unsafe_writes'])\n  File \"/tmp/ansible_ypcZMB/ansible_modlib.zip/ansible/module_utils/basic.py\", line 2001, in atomic_move\nNameError: global name 'exception' is not defined\n",
 - name: redhat | update default configuration
   template:
      src: named-rhel.conf.j2
@@ -47,4 +45,3 @@
      backup: yes
   notify:
     - restart bind
-

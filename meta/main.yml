@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: bind
   author: juju4
   description: BIND named server secure deployment
   license: BSD

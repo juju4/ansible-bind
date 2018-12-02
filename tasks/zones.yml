@@ -1,5 +1,6 @@
 ---
-## inspired from https://www.sbarjatiya.com/notes_wiki/index.php/Ansible_named-server_role_for_both_public_and_private_DNS
+## inspired from
+## https://www.sbarjatiya.com/notes_wiki/index.php/Ansible_named-server_role_for_both_public_and_private_DNS
 ##      https://github.com/bertvv/ansible-role-bind/tree/master
 
 - name: Create zone forward files
@@ -54,4 +55,3 @@
     create: yes
   notify:
     - restart bind
-

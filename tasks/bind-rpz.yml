@@ -31,7 +31,8 @@
            ::1;
        };
        include "{{ bind_etc }}/named-local-rpz.conf";
-       //include "{{ bind_etc }}/named-spamhaus-rpz.conf";	// paid service
+       // paid service
+       //include "{{ bind_etc }}/named-spamhaus-rpz.conf";
 
   notify:
     - restart bind

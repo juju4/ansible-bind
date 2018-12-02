@@ -5,13 +5,13 @@
   when: ansible_distribution == 'Ubuntu'
 - name: Include version-specific variables for RedHat
   include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
-  when: ansible_os_family == "RedHat" or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  when: ansible_os_family == "RedHat"
 
 - include: debian.yml
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - include: redhat.yml
-  when: ansible_os_family == "RedHat" or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  when: ansible_os_family == "RedHat"
 
 - name: install new named.conf options with dnssec
   template:
@@ -42,11 +42,11 @@
   when: bind_malwaredomainslist_blackhole is defined and bind_malwaredomainslist_blackhole
 
 - include: misp-integration.yml
-  when: bind_misp_apikey != '' and bind_misp_url != ''
+  when: bind_misp_apikey and bind_misp_url
 
 ## Centos7: cant replace named.conf when named-chroot active
 - include: peerdns.yml
-  when: ansible_os_family == "RedHat" or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  when: ansible_os_family == "RedHat"
 
 #- meta: flush_handlers
 ## should be at the end, else can lose dns connectivity

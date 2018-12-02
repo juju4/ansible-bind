@@ -4,7 +4,8 @@
   stat: path=/etc/resolvconf/resolv.conf.d/head
   register: resolvconfhead
 
-## FIXME! lineinfile module exception on xenial/travis: https://travis-ci.org/juju4/ansible-bind/jobs/179332031#L2795
+## FIXME! lineinfile module exception on xenial/travis:
+#    https://travis-ci.org/juju4/ansible-bind/jobs/179332031#L2795
 - name: debian | ensure resolvconf head as localhost resolver
   lineinfile:
     dest: /etc/resolvconf/resolv.conf.d/head
@@ -23,4 +24,3 @@
   notify:
     - restart networking
   when: ansible_env['TRAVIS'] is not defined
-

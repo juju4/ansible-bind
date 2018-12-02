@@ -10,11 +10,5 @@
   with_items:
     - { re: '^  /var/log/bind/ rw,', l: '  /var/log/bind/ rw,', i: '^  /var/log/named/ rw,' }
     - { re: '^  /var/log/bind/\*\* rw,', l: '  /var/log/bind/** rw,', i: '^  /var/log/named/ rw,' }
-  register: apparmornamed
-
-- name: reload named apparmor
-  command: apparmor_parser -r /etc/apparmor.d/usr.sbin.named
-  when: apparmornamed.changed
-## travis: 'Warning: unable to find a suitable fs in /proc/mounts, is it mounted?'
-  ignore_errors: true
-
+  notify:
+    - reload apparmor bind

@@ -6,4 +6,3 @@
     dest: /etc/resolv.conf
     regexp: 'nameserver .*'
     replace: 'nameserver 127.0.0.1'
-
