@@ -1,4 +1,4 @@
-; {{ ansible_managed }}
+{{ ansible_managed | comment(decoration="; ") }}
 ; This zone will redirect all requests back to the blackhole itself.
 
 $TTL    86400   ; one day

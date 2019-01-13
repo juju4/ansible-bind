@@ -1,5 +1,5 @@
+{{ ansible_managed | comment(decoration="; ") }}
 ; Reverse zone file for {{ zone.vars.bind_zone_name }}
-; {{ ansible_managed }}
 ; vi: ft=bindzone
 
 $TTL {{ zone.vars.bind_zone_ttl }}

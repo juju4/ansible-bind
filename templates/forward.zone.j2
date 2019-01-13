@@ -1,5 +1,5 @@
+{{ ansible_managed | comment(decoration="; ") }}
 ; Zone file for {{ zone.vars.bind_zone_name }}
-; {{ ansible_managed }}
 
 $ORIGIN {{ zone.vars.bind_zone_name }}.
 $TTL {{ zone.vars.bind_zone_ttl }}
