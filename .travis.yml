@@ -113,8 +113,11 @@ script:
 
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- cat /etc/shells"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ls -la /bin/*sh*"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- which sh"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- which time"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- echo $PATH"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ls -la /etc/ansible/roles/juju4.bind/test/integration/default/serverspec/"
-  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- time sh -x /etc/ansible/roles/juju4.bind/test/integration/default/serverspec/run-local-tests.sh"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- time /bin/sh -x /etc/ansible/roles/juju4.bind/test/integration/default/serverspec/run-local-tests.sh"
   - sudo -E su $USER -c "lxc stop run-${distribution}-${version//./} --force"
 
 notifications:
