@@ -111,12 +111,6 @@ script:
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ansible-playbook -i inventory --connection=local --become /etc/ansible/roles/juju4.bind/test/integration/default/default.yml" > /tmp/idempotency.log
   - "grep -q 'changed=0.*failed=0' /tmp/idempotency.log && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)"
 
-  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- cat /etc/shells"
-  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ls -la /bin/*sh*"
-  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- which sh"
-  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- which time"
-  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- echo $PATH"
-  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ls -la /etc/ansible/roles/juju4.bind/test/integration/default/serverspec/"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- /etc/ansible/roles/juju4.bind/test/integration/default/serverspec/run-local-tests.sh"
   - sudo -E su $USER -c "lxc stop run-${distribution}-${version//./} --force"
 
