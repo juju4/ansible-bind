@@ -1,8 +1,9 @@
 ---
 
 - name: apt | Install bind9
-  apt: name={{ item }} state=present update_cache=yes
-  with_items: "{{ bind_pkgs }}"
+  apt: name={{ bind_pkgs }} state=present update_cache=yes
+  register: pkg_result
+  until: pkg_result is success
 
 - include: bind-apparmor.yml
 

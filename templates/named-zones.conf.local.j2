@@ -1,4 +1,4 @@
-// {{ ansible_managed }}
+{{ ansible_managed | comment('c') }}
 // zones files
 
 zone "{{ zone.vars.bind_zone_name }}" IN {
