@@ -1,7 +1,6 @@
 ---
 
 - hosts: all
-#- hosts: test-kitchen
   vars:
 ## don't forget trailing dot after domain name!
 ## usual internal zones are .local, .lan, .wan, .vpn, .lab
