@@ -99,7 +99,7 @@ describe command('named -V'), :if => os[:family] == 'redhat' && os[:release] == 
   its(:stdout) { should match /compiled with OpenSSL version:/ }
   its(:stdout) { should match /linked to OpenSSL version:/ }
 end
-describe command('named -V'), :if => (os[:family] != 'ubuntu' || os[:release] == '14.04') && !(os[:family] == 'redhat' && os[:release] == '7') do
+describe command('named -V'), :if => (os[:family] == 'ubuntu' && os[:release] == '14.04') && (os[:family] == 'redhat' && os[:release] == '6') do
   its(:stdout) { should match /using OpenSSL version/ }
 end
 
