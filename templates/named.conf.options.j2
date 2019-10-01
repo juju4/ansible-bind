@@ -38,7 +38,6 @@ options {
         //========================================================================
         dnssec-enable yes;
         dnssec-validation {{ bind_dnssec_validation | lower }};
-        dnssec-lookaside auto;
 
         auth-nxdomain no;    # conform to RFC1035
 
