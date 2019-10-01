@@ -115,11 +115,17 @@ script:
 
 after_script:
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- named -V"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ls -l /etc/bind/ /var/named/chroot/etc/"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- grep nastynasty.com /etc/bind/local.rpz.zone /var/named/chroot/etc/local.rpz.zone"
-  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- systemctl -l --no-pager status bind.service"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- systemctl -l --no-pager status bind9.service"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- tail -1000 /var/log/bind/named.log"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- tail -1000 /var/log/bind/security.log"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- systemctl -l --no-pager status named.service"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- tail -1000 /var/named/chroot/var/log/named.log"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- tail -1000 /var/named/chroot/var/log/security.log"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- systemctl -l --no-pager status"
   - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- journalctl -xe --no-pager"
+  - sudo -E su $USER -c "lxc exec run-${distribution}-${version//./} -- ps auxw"
   - sudo -E su $USER -c "lxc stop run-${distribution}-${version//./} --force"
 
 notifications:
