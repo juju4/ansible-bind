@@ -1,5 +1,4 @@
-[![Build Status - Master](https://travis-ci.org/juju4/ansible-bind.svg?branch=master)](https://travis-ci.org/juju4/ansible-bind)
-[![Build Status - Devel](https://travis-ci.org/juju4/ansible-bind.svg?branch=devel)](https://travis-ci.org/juju4/ansible-bind/branches)
+
 # Secure Bind ansible role
 
 Ansible role to setup Bind/Named DNS server with sane secure default.
