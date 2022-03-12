@@ -1,6 +1,10 @@
 ---
 
 - block:
+    - name: Check if /etc/default/bind9
+      stat:
+        path: /etc/default/bind9
+      register: default
     - name: debian | disable ipv6
       replace:
         dest: /etc/default/bind9
@@ -9,6 +13,7 @@
         backup: yes
       notify:
         - restart bind
+      when: default.stat.exists
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - block:
