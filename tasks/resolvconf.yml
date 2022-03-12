@@ -13,7 +13,7 @@
   notify:
     - restart resolvconf
   when: resolvconfhead.stat.exists and ansible_env['TRAVIS'] is not defined
-## just for travis (sic)
+  ## just for travis (sic)
   ignore_errors: true
 
 - name: debian | ignore dns from dhcp server

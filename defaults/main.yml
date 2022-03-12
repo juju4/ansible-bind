@@ -11,7 +11,7 @@ bind_dns_forwarders: [ '8.8.8.8', '8.8.4.4' ]
 bind_dns_forward_only: true
 
 bind_dnssec_validation: 'yes'
-#bind_dnssec_validation: auto
+# bind_dnssec_validation: auto
 bind_nameservers: []
 bind_dns_authoritative: true
 
@@ -28,7 +28,7 @@ bind_disable_ipv6: true
 
 bind_malwaredomainslist_blackhole: true
 bind_sinkhole_ipv4: 10.0.0.1
-#bind_sinkhole_ipv4: 127.0.0.1
+# bind_sinkhole_ipv4: 127.0.0.1
 bind_sinkhole_ipv6: ::1
 bind_blackhole_tld:
   - science
@@ -36,7 +36,7 @@ bind_blackhole_tld:
   - gdn
   - download
   - accountant
-  - trade 
+  - trade
   - biz
   - bid
   - link
@@ -49,37 +49,37 @@ bind_blackhole_tld:
   - party
   - gq
 
-## MISP RPZ integration?
-## https://www.circl.lu/doc/misp/automation/#rpz-export
+# MISP RPZ integration?
+# https://www.circl.lu/doc/misp/automation/#rpz-export
 bind_misp_apikey: ''
 bind_misp_url: ''
 bind_misp_rpz_json_req: '{"request": {"eventId" : "false", "tags": ["OSINT", "!OUTDATED"], "policy": "walled-garden", "walled_garden": "127.0.0.5", "refresh": "5h"} }'
 
 bind_zones: []
-#binds_zones:
-#  - zone: 'local'
-#    vars:
-#      - bind_zone_name: 'local'
-#      - bind_zone_networks:
-#          - "192.168.1"
-#      - bind_zone_also_notify: []
-#      - bind_zone_hosts:
-#          - name: alpha
-#            ip: 192.168.1.1
-#            aliases:
-#              - centaur
-#          - name: ns
-#            ip: 192.168.1.10
-#      - bind_zone_hostmaster_email: "hostmaster"
-#      - bind_zone_ttl: "1W"
-#      - bind_zone_time_to_refresh: "1D"
-#      - bind_zone_time_to_retry: "1H"
-#      - bind_zone_time_to_expire: "1W"
-#      - bind_zone_minimum_ttl: "1D"
-#      - bind_zone_name_servers: []
-#      - bind_other_name_servers: []
-#      - bind_zone_mail_servers: []
-#      - bind_zone_services: []
-#      - bind_zone_text: []
+# binds_zones:
+#   - zone: 'local'
+#     vars:
+#       - bind_zone_name: 'local'
+#       - bind_zone_networks:
+#           - "192.168.1"
+#       - bind_zone_also_notify: []
+#       - bind_zone_hosts:
+#           - name: alpha
+#             ip: 192.168.1.1
+#             aliases:
+#               - centaur
+#           - name: ns
+#             ip: 192.168.1.10
+#       - bind_zone_hostmaster_email: "hostmaster"
+#       - bind_zone_ttl: "1W"
+#       - bind_zone_time_to_refresh: "1D"
+#       - bind_zone_time_to_retry: "1H"
+#       - bind_zone_time_to_expire: "1W"
+#       - bind_zone_minimum_ttl: "1D"
+#       - bind_zone_name_servers: []
+#       - bind_other_name_servers: []
+#       - bind_zone_mail_servers: []
+#       - bind_zone_services: []
+#       - bind_zone_text: []
 
 bind_monitoring_nrpe: true

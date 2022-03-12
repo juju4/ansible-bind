@@ -22,8 +22,8 @@
       PEERDNS=no
       DNS1=127.0.0.1
     marker: "# {mark} ANSIBLE MANAGED BLOCK: local dns"
-#  notify:
-#    - restart network
+  # notify:
+  #   - restart network
   when: ifcfg.stat.exists
 
 - name: redhat | ensure bind active

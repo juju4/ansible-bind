@@ -2,96 +2,96 @@
 
 - hosts: all
   vars:
-## don't forget trailing dot after domain name!
-## usual internal zones are .local, .lan, .wan, .vpn, .lab
+    ## don't forget trailing dot after domain name!
+    ## usual internal zones are .local, .lan, .wan, .vpn, .lab
     - bind_zone_master_server_ip: "{{ ansible_default_ipv4.address }}"
     - bind_acls:
-      - name: private
-        match_list:
-          - 192.168.0.0/24
-          - 10.0.0.0/8
-    
+        - name: private
+          match_list:
+            - 192.168.0.0/24
+            - 10.0.0.0/8
+
     - bind_zones:
         - zone: 'int.example.com'
           vars:
-              bind_zone_name: 'int.example.com'
-              bind_zone_networks:
-                - "10.1.0"
-              bind_zone_also_notify: []
-              bind_zone_hosts:
-                - name: '@'
-                  ip:
-                    - 127.0.0.1
-                - name: mail
-                  ip: 127.0.0.1
-                  aliases:
-                    - smtp
-                - name: alpha
-                  ip: 10.1.0.1
-                  aliases:
-                    - centaur
-                - name: "{{ ansible_hostname }}"
-#                 ip: "{{ ansible_default_ipv4.address }}"
-                  ip: 10.1.0.2
-                  aliases:
-                    - ns1
-                - name: ns2
-                  ip: 10.1.0.3
-                - name: syslog
-                  ip: 10.1.0.10
-                - name: proxy
-                  ip: 10.1.0.11
-                - name: sftp
-                  ip: 10.1.0.12
-                - name: sinkhole
-                  ip: 10.1.0.13
-                - name: ad
-                  ip: 10.1.0.15
-                - name: www
-                  ip: 10.1.0.100
-                  aliases:
-                    - www2
-              bind_zone_hostmaster_email: "hostmaster"
-              bind_zone_ttl: "1W"
-              bind_zone_time_to_refresh: "1D"
-              bind_zone_time_to_retry: "1H"
-              bind_zone_time_to_expire: "1W"
-              bind_zone_minimum_ttl: "1D"
-#              bind_zone_name_servers: [ 'ns1', 'ns2' ]
-              bind_zone_name_servers: [ "{{ ansible_hostname }}", 'ns2' ]
-              bind_other_name_servers: []
-              bind_zone_mail_servers: []
-              bind_zone_services: []
-              bind_zone_text: []
+            bind_zone_name: 'int.example.com'
+            bind_zone_networks:
+              - "10.1.0"
+            bind_zone_also_notify: []
+            bind_zone_hosts:
+              - name: '@'
+                ip:
+                  - 127.0.0.1
+              - name: mail
+                ip: 127.0.0.1
+                aliases:
+                  - smtp
+              - name: alpha
+                ip: 10.1.0.1
+                aliases:
+                  - centaur
+              - name: "{{ ansible_hostname }}"
+                # ip: "{{ ansible_default_ipv4.address }}"
+                ip: 10.1.0.2
+                aliases:
+                  - ns1
+              - name: ns2
+                ip: 10.1.0.3
+              - name: syslog
+                ip: 10.1.0.10
+              - name: proxy
+                ip: 10.1.0.11
+              - name: sftp
+                ip: 10.1.0.12
+              - name: sinkhole
+                ip: 10.1.0.13
+              - name: ad
+                ip: 10.1.0.15
+              - name: www
+                ip: 10.1.0.100
+                aliases:
+                  - www2
+            bind_zone_hostmaster_email: "hostmaster"
+            bind_zone_ttl: "1W"
+            bind_zone_time_to_refresh: "1D"
+            bind_zone_time_to_retry: "1H"
+            bind_zone_time_to_expire: "1W"
+            bind_zone_minimum_ttl: "1D"
+            # bind_zone_name_servers: [ 'ns1', 'ns2' ]
+            bind_zone_name_servers: [ "{{ ansible_hostname }}", 'ns2' ]
+            bind_other_name_servers: []
+            bind_zone_mail_servers: []
+            bind_zone_services: []
+            bind_zone_text: []
         - zone: 'lab.example.com'
           vars:
-              bind_zone_name: 'lab.example.com'
-              bind_zone_networks:
-                - "10.2.0"
-              bind_zone_also_notify: []
-              bind_zone_hosts:
-                - name: '@'
-                  ip:
-                    - 127.0.0.1
-                - name: beta
-                  ip: 10.2.0.1
-                  aliases:
-                    - centaur
-                - name: ns
-                  ip: 10.2.0.10
-                - name: www
-                  ip: 10.2.0.100
-              bind_zone_hostmaster_email: "hostmaster"
-              bind_zone_ttl: "1W"
-              bind_zone_time_to_refresh: "1D"
-              bind_zone_time_to_retry: "1H"
-              bind_zone_time_to_expire: "1W"
-              bind_zone_minimum_ttl: "1D"
-              bind_zone_name_servers: [ 'ns' ]
-              bind_other_name_servers: []
-              bind_zone_mail_servers: []
-              bind_zone_services: []
-              bind_zone_text: []
+            bind_zone_name: 'lab.example.com'
+            bind_zone_networks:
+              - "10.2.0"
+            bind_zone_also_notify: []
+            bind_zone_hosts:
+              - name: '@'
+                ip:
+                  - 127.0.0.1
+              - name: beta
+                ip: 10.2.0.1
+                aliases:
+                  - centaur
+              - name: ns
+                ip: 10.2.0.10
+              - name: www
+                ip: 10.2.0.100
+            bind_zone_hostmaster_email: "hostmaster"
+            bind_zone_ttl: "1W"
+            bind_zone_time_to_refresh: "1D"
+            bind_zone_time_to_retry: "1H"
+            bind_zone_time_to_expire: "1W"
+            bind_zone_minimum_ttl: "1D"
+            bind_zone_name_servers: [ 'ns' ]
+            bind_other_name_servers: []
+            bind_zone_mail_servers: []
+            bind_zone_services: []
+            bind_zone_text: []
 
   roles:
     - juju4.bind

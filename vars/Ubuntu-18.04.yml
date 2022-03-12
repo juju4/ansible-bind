@@ -1,16 +1,16 @@
 ---
 
 bind_pkgs:
-    - bind9
-    - dnsutils
-#    - dnssec-tools
-    - libnet-dns-sec-perl
-    - libmailtools-perl
-    - libcrypt-openssl-random-perl
-    - ldnsutils
-    - wget
-    - unzip
-#    - resolvconf
+  - bind9
+  - dnsutils
+  # - dnssec-tools
+  - libnet-dns-sec-perl
+  - libmailtools-perl
+  - libcrypt-openssl-random-perl
+  - ldnsutils
+  - wget
+  - unzip
+  # - resolvconf
 
 bind_svc: bind9
 bind_user: bind

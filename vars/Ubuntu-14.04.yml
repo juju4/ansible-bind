@@ -1,18 +1,18 @@
 ---
 
 bind_pkgs:
-    - bind9
-    - dnsutils
-    - dnssec-tools
-    - libnet-dns-sec-perl
-    - libmailtools-perl
-    - libcrypt-openssl-random-perl
-    - ldnsutils
-    - wget
-    - unzip
-    - resolvconf
-## only necessary on controller, but for kitchen, controller is target...
-    - python-netaddr
+  - bind9
+  - dnsutils
+  - dnssec-tools
+  - libnet-dns-sec-perl
+  - libmailtools-perl
+  - libcrypt-openssl-random-perl
+  - ldnsutils
+  - wget
+  - unzip
+  - resolvconf
+  ## only necessary on controller, but for kitchen, controller is target...
+  - python-netaddr
 
 bind_svc: bind9
 bind_user: bind
