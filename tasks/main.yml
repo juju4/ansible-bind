@@ -7,10 +7,10 @@
   include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_os_family == "RedHat"
 
-- include: debian.yml
+- import_tasks: debian.yml
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- include: redhat.yml
+- import_tasks: redhat.yml
   when: ansible_os_family == "RedHat"
 
 - name: install new named.conf options with dnssec
@@ -24,36 +24,38 @@
     - restart bind
 
 - block:
-    - include: "zones.yml zone={{ outer_item }}"
+    - include_tasks: zones.yml
+      vars:
+        zone: "{{ outer_item }}"
       with_items: "{{ bind_zones }}"
       loop_control:
         loop_var: outer_item
   when: bind_zones != []
 
-- include: bind-secure-template.yml
+- import_tasks: bind-secure-template.yml
 
-- include: ipv6.yml
+- import_tasks: ipv6.yml
   when: bind_disable_ipv6 is defined and bind_disable_ipv6
 
-- include: bind-rpz.yml
+- import_tasks: bind-rpz.yml
   when: bind_rpz is defined and bind_rpz
 
-- include: bind-blackhole-malwaredomainslist.yml
+- import_tasks: bind-blackhole-malwaredomainslist.yml
   when: bind_malwaredomainslist_blackhole is defined and bind_malwaredomainslist_blackhole
 
-- include: misp-integration.yml
+- import_tasks: misp-integration.yml
   when: bind_misp_apikey and bind_misp_url
 
 ## Centos7: cant replace named.conf when named-chroot active
-- include: peerdns.yml
+- import_tasks: peerdns.yml
   when: ansible_os_family == "RedHat"
 
 # - meta: flush_handlers
 ## should be at the end, else can lose dns connectivity
-- include: resolvconf2.yml
+- import_tasks: resolvconf2.yml
   when: not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")
 
-- include: monitoring-nrpe.yml
+- import_tasks: monitoring-nrpe.yml
   when: bind_monitoring_nrpe is defined and bind_monitoring_nrpe
 
 - name: Ensure bind is running and enabled on boot.

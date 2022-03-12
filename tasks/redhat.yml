@@ -1,6 +1,6 @@
 ---
 ## for haveged (better entropy for gpg)
-# - include: redhat-epel.yml
+# - import_tasks: redhat-epel.yml
 
 - name: yum | Install bind
   yum: name={{ bind_pkgs }} state=present update_cache=yes
