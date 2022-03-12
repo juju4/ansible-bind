@@ -22,7 +22,7 @@
   tasks:
     - name: Get named.conf stat
       stat:
-        path: "{{ named_conf}}"
+        path: "{{ named_conf }}"
       register: cfg
     - name: Validate named.conf present
       assert:
