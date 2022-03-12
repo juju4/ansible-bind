@@ -14,10 +14,10 @@ http://www.mill-yard.com/2013/07/centos-bind-blocking-dns-reflection-or-amplific
 options {
 [other already entered options settings]
 ...
-allow-query {any;};	
-recursion no;	
-additional-from-auth no; 	
-additional-from-cache no;	
+allow-query {any;};
+recursion no;
+additional-from-auth no;
+additional-from-cache no;
 version "MYOB";
 rate-limit { responses-per-second 10; window 5;	};
 };
@@ -34,4 +34,3 @@ FIXME! export use CNAME which is not working with pure ip (other rpz zone as A)
 
 empty-zones-enable yes;
 https://deepthought.isc.org/article/AA-00800/0/Automatic-empty-zones-including-RFC-1918-prefixes.html
-

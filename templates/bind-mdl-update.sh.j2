@@ -18,4 +18,3 @@ wget -q -O $out http://malware-domains.com/files/spywaredomains.zones.zip
 	&& named-checkconf {{ bind_etc }}/named.conf \
 {% endif %}
     || touch /etc/bind/spywaredomains.zones
-

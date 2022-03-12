@@ -49,4 +49,3 @@ setup() {
     [ "$status" -eq 0 ]
     [[ "$output" =~ "status: NOERROR" ]]
 }
-

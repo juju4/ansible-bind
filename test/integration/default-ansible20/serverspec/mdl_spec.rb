@@ -11,4 +11,3 @@ end
 describe command('host www.bakuzbuq.ru') do
   its(:stdout) { should match /has address 10.0.0.1/ }
 end
-

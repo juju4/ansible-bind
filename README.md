@@ -70,6 +70,3 @@ https://github.com/bertvv/ansible-role-bind
 In the end, there is an existing filter to do that since 1.9 ```ipaddr('revdns')```
 https://docs.ansible.com/ansible/playbooks_filters_ipaddr.html
 One limitation, it's for not fit for zone and as such IPv6 is untested/unsupported.
-
-
-

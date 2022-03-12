@@ -31,4 +31,3 @@ end
 describe command('host register.science') do
   its(:stdout) { should match /has address 10.0.0.1/ }
 end
-

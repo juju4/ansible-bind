@@ -24,5 +24,3 @@ zone "{{ network  | ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}" IN {
 };
 {% endfor %}
 {% endif %}
-
-

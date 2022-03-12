@@ -86,5 +86,3 @@ describe command('drill -S www.freebsd.org'), :if => os[:family] == 'ubuntu' || 
   its(:stdout) { should match /DNSKEY/ }
   its(:stdout) { should_not match /<no data>/ }
 end
-
-

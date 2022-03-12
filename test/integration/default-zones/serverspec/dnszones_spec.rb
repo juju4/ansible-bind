@@ -83,4 +83,3 @@ end
 describe command('host www.lab.example.com') do
   its(:stdout) { should match /www.lab.example.com has address 10.2.0.100/ }
 end
-

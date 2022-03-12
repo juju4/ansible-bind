@@ -6,14 +6,14 @@ set :backend, :exec
 describe service('bind9'), :if => os[:family] == 'ubuntu' || os[:family] == 'debian' do
   it { should be_enabled   }
   it { should be_running   }
-end  
+end
 
 describe process('named'), :if => os[:family] == 'ubuntu' || os[:family] == 'debian' do
   it { should be_running }
   its(:args) { should match /-u bind\b/ }
   it "is listening on port 53" do
     expect(port(53)).to be_listening.with('udp')
-  end 
+  end
 end
 
 describe service('named-chroot'), :if => os[:family] == 'redhat' do
@@ -26,7 +26,7 @@ describe process('named'), :if => os[:family] == 'redhat' do
   its(:args) { should match /-u named\b/ }
   it "is listening on port 53" do
     expect(port(53)).to be_listening.with('udp')
-  end 
+  end
 end
 
 describe file('/etc/bind/named.conf'), :if => os[:family] == 'ubuntu' || os[:family] == 'debian' do
@@ -89,5 +89,3 @@ end
 describe command('named -V'), :if => os[:family] != 'ubuntu' || os[:release] != '16.04' do
   its(:stdout) { should match /using OpenSSL version/ }
 end
-
-
