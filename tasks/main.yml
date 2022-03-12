@@ -60,6 +60,10 @@
 
 - name: Ensure bind is running and enabled on boot.
   service: name={{ bind_svc }} state=started enabled=yes
+  when: >
+    not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+        )
 
 ## in some case, dnssec checks fail on first execution
 - name: Flush handlers

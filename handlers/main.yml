@@ -2,15 +2,23 @@
 
 - name: restart bind
   service: name={{ bind_svc }} state=restarted
+  when: >
+    not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+        )
 
 - name: restart resolvconf
   service: name=resolvconf state=restarted
+  when: >
+    not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+        )
 
 - name: restart networking
   service: name=networking state=restarted
   when: >
     not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
         )
 
 - name: reload apparmor bind
