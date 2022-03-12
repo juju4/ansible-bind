@@ -12,6 +12,7 @@
   command: "ls -al /etc/sysconfig/network-scripts/"
   register: netdir
   changed_when: false
+  failed_when: false
 - name: Debug | var network-scripts
   debug: var=netdir.stdout_lines
 
@@ -31,6 +32,10 @@
 
 - name: redhat | ensure bind active
   service: name={{ bind_svc }} state=started
+  when: >
+    not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+        )
 
 - name: check if file exists
   stat: path=/etc/resolv.conf
