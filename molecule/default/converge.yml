@@ -27,5 +27,7 @@
       when: >
         (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int >= 16) or
         (ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 8)
+  vars:
+    bind_resolvconf_update_failedwhen: false
   roles:
     - juju4.bind

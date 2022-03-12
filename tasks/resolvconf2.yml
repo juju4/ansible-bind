@@ -6,3 +6,4 @@
     dest: /etc/resolv.conf
     regexp: 'nameserver .*'
     replace: 'nameserver 127.0.0.1'
+  failed_when: "{{ bind_resolvconf_update_failedwhen | default(omit) }}"
