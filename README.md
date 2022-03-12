@@ -1,3 +1,5 @@
+[![Actions Status - Master](https://github.com/juju4/ansible-bind/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-bind/actions?query=branch%3Amaster)
+[![Actions Status - Devel](https://github.com/juju4/ansible-bind/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-bind/actions?query=branch%3Adevel)
 
 # Secure Bind ansible role
 
