@@ -79,11 +79,19 @@
     - name: Validate named ps output
       assert:
         that: ps.stdout
+      when: >
+        not (ansible_virtualization_type is defined and
+              (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+          )
     - name: Ensure domain port is listening
       wait_for:
         host: localhost
         port: 53
         timeout: 5
+      when: >
+        not (ansible_virtualization_type is defined and
+              (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
+          )
 
     - name: host www.google.com
       command: host www.google.com
