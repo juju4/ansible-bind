@@ -14,6 +14,10 @@
     - restart resolvconf
   when: resolvconfhead.stat.exists and ansible_env['TRAVIS'] is not defined
 
+- name: Check if dhclient.conf present
+  stat: path=/etc/dhcp/dhclient.conf
+  register: dhclient
+
 - name: debian | ignore dns from dhcp server
   lineinfile:
     dest: /etc/dhcp/dhclient.conf
@@ -21,4 +25,4 @@
     insertafter: '#supersede'
   notify:
     - restart networking
-  when: ansible_env['TRAVIS'] is not defined
+  when: ansible_env['TRAVIS'] is not defined and dhclient.stat.exists
