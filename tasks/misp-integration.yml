@@ -8,15 +8,18 @@
     mode: '0700'
 
 - name: run misp-bind-rpz-fetch.sh once
-  command: "/usr/local/bin/misp-bind-rpz-fetch.sh creates={{ bind_etc }}/misp.rpz"
-  ignore_errors: true
+  command: "/usr/local/bin/misp-bind-rpz-fetch.sh"
+  args:
+    creates: "{{ bind_etc }}/misp.rpz"
+  failed_when: false
 
 - name: check rpz retrieve is correct
   command: "head -1 {{ bind_etc }}/misp.rpz"
   register: misprpz
   changed_when: false
-  ignore_errors: true
-- debug: msg="Error in MISP RPZ fetch! need to check MISP user account matching the key!"
+  failed_when: false
+- name: Debug | error notification
+  debug: msg="Error in MISP RPZ fetch! need to check MISP user account matching the key!"
   when: >
     'Your user account is expecting a password change' in misprpz.stdout or
     'Invalid event ID format' in misprpz.stdout

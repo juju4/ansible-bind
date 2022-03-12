@@ -15,4 +15,4 @@
 
 - name: reload apparmor bind
   command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"
-  ignore_errors: true
+  failed_when: false

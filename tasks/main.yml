@@ -60,7 +60,8 @@
   service: name={{ bind_svc }} state=started enabled=yes
 
 ## in some case, dnssec checks fail on first execution
-- meta: flush_handlers
+- name: Flush handlers
+  meta: flush_handlers
 - name: Give little pause for bind initialization
   pause:
     seconds: 3

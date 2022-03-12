@@ -1,16 +1,19 @@
 ---
 
-- debug: var=ansible_all_ipv4_addresses
+- name: Debug | var ansible_all_ipv4_addresses
+  debug: var=ansible_all_ipv4_addresses
 - name: check network config
   command: "ifconfig -a"
   register: ifconfig
   changed_when: false
-- debug: var=ifconfig.stdout_lines
+- name: Debug | var ifconfig
+  debug: var=ifconfig.stdout_lines
 - name: redhat | check network config 2
   command: "ls -al /etc/sysconfig/network-scripts/"
   register: netdir
   changed_when: false
-- debug: var=netdir.stdout_lines
+- name: Debug | var network-scripts
+  debug: var=netdir.stdout_lines
 
 - name: check if file exists
   stat: path=/etc/sysconfig/network-scripts/ifcfg-eth0
