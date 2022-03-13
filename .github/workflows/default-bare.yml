@@ -79,6 +79,7 @@ jobs:
           systemctl -l --no-pager status bind9 || true
           systemctl -l --no-pager status named || true
           systemd-analyze --no-pager security || true
+          systemctl --failed || true
           rsyslogd -v
         if: ${{ always() }}
         continue-on-error: true
