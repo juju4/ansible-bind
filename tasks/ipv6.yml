@@ -2,11 +2,11 @@
 
 - block:
     - name: Check if /etc/default/bind9
-      stat:
+      ansible.builtin.stat:
         path: /etc/default/bind9
       register: default
     - name: debian | disable ipv6
-      replace:
+      ansible.builtin.replace:
         dest: /etc/default/bind9
         regexp: '^OPTIONS="-u bind'
         replace: 'OPTIONS="-4 -u bind'
@@ -18,7 +18,7 @@
 
 - block:
     - name: redhat | disable ipv6
-      replace:
+      ansible.builtin.replace:
         dest: /etc/sysconfig/named
         regexp: '^OPTIONS=""'
         replace: 'OPTIONS="-4"'

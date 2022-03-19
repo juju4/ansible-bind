@@ -1,21 +1,21 @@
 ---
 
 - name: restart bind
-  service: name={{ bind_svc }} state=restarted
+  ansible.builtin.service: name={{ bind_svc }} state=restarted
   when: >
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
         )
 
 - name: restart resolvconf
-  service: name=resolvconf state=restarted
+  ansible.builtin.service: name=resolvconf state=restarted
   when: >
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
         )
 
 - name: restart networking
-  service: name=networking state=restarted
+  ansible.builtin.service: name=networking state=restarted
   when: >
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
@@ -23,5 +23,5 @@
     and (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int < 18)
 
 - name: reload apparmor bind
-  command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"
+  ansible.builtin.command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"
   failed_when: false

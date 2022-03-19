@@ -3,10 +3,10 @@
 ## FIXME! views not implemented
 
 - name: ensure log directory exists
-  file: dest="{{ bind_log }}" state=directory mode=0755 owner="{{ bind_user }}"
+  ansible.builtin.file: dest="{{ bind_log }}" state=directory mode=0755 owner="{{ bind_user }}"
 
 - name: ensure good secure settings in local configuration
-  blockinfile:
+  ansible.builtin.blockinfile:
     dest: "{{ bind_etc }}/named.conf.local"
     marker: '// {mark} ANSIBLE MANAGED BLOCK: team-cymru template'
     block: |

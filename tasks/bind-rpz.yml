@@ -1,25 +1,25 @@
 ---
 
 - name: add local rpz zone
-  template:
+  ansible.builtin.template:
     src: named-local-rpz.conf.j2
     dest: "{{ bind_etc }}/named-local-rpz.conf"
     mode: 0644
 
 - name: add local rpz zone
-  template:
+  ansible.builtin.template:
     src: "{{ bind_rpz_blocklist_template }}"
     dest: "{{ bind_etc }}/local.rpz.zone"
     mode: 0644
 
 - name: add local whitelist rpz zone
-  template:
+  ansible.builtin.template:
     src: "{{ bind_rpz_whitelist_template }}"
     dest: "{{ bind_etc }}/local-whitelist.rpz.zone"
     mode: 0644
 
 - name: add rpz response policy in local configuration
-  blockinfile:
+  ansible.builtin.blockinfile:
     dest: "{{ bind_etc }}/named.conf.local"
     marker: '// {mark} ANSIBLE MANAGED BLOCK: rpz zone'
     block: |

@@ -1,7 +1,7 @@
 ---
 
 - name: ubuntu | add few options to apparmor
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/apparmor.d/usr.sbin.named
     regexp: "{{ item.re }}"
     line: "{{ item.l }}"

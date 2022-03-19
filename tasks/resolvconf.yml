@@ -1,13 +1,13 @@
 ---
 
 - name: check if file exists
-  stat: path=/etc/resolvconf/resolv.conf.d/head
+  ansible.builtin.stat: path=/etc/resolvconf/resolv.conf.d/head
   register: resolvconfhead
 
 ## FIXME! lineinfile module exception on xenial/travis:
 #    https://travis-ci.org/juju4/ansible-bind/jobs/179332031#L2795
 - name: debian | ensure resolvconf head as localhost resolver
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/resolvconf/resolv.conf.d/head
     line: 'nameserver 127.0.0.1'
   notify:
@@ -15,11 +15,11 @@
   when: resolvconfhead.stat.exists and ansible_env['TRAVIS'] is not defined
 
 - name: Check if dhclient.conf present
-  stat: path=/etc/dhcp/dhclient.conf
+  ansible.builtin.stat: path=/etc/dhcp/dhclient.conf
   register: dhclient
 
 - name: debian | ignore dns from dhcp server
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/dhcp/dhclient.conf
     line: 'supersede domain-name-servers 127.0.0.1'
     insertafter: '#supersede'

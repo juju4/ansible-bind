@@ -1,25 +1,25 @@
 ---
 
 - name: install misp update script
-  template:
+  ansible.builtin.template:
     src: misp-bind-rpz-fetch.sh.j2
     dest: /usr/local/bin/misp-bind-rpz-fetch.sh
     ## contains MISP api key!!!
     mode: '0700'
 
 - name: run misp-bind-rpz-fetch.sh once
-  command: "/usr/local/bin/misp-bind-rpz-fetch.sh"
+  ansible.builtin.command: "/usr/local/bin/misp-bind-rpz-fetch.sh"
   args:
     creates: "{{ bind_etc }}/misp.rpz"
   failed_when: false
 
 - name: check rpz retrieve is correct
-  command: "head -1 {{ bind_etc }}/misp.rpz"
+  ansible.builtin.command: "head -1 {{ bind_etc }}/misp.rpz"
   register: misprpz
   changed_when: false
   failed_when: false
 - name: Debug | error notification
-  debug: msg="Error in MISP RPZ fetch! need to check MISP user account matching the key!"
+  ansible.builtin.debug: msg="Error in MISP RPZ fetch! need to check MISP user account matching the key!"
   when: >
     'Your user account is expecting a password change' in misprpz.stdout or
     'Invalid event ID format' in misprpz.stdout
