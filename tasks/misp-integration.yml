@@ -25,6 +25,6 @@
     'Invalid event ID format' in misprpz.stdout
 
 - name: Add misp2bind cron job
-  cron: name="misp2bind refresh" minute=12 hour=12
+  ansible.builtin.cron: name="misp2bind refresh" minute=12 hour=12
     user="root" job="/usr/local/bin/misp-bind-rpz-fetch.sh"
     cron_file=ansible_misp2bind-refresh

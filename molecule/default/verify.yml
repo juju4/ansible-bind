@@ -4,7 +4,7 @@
   hosts: bind
   pre_tasks:
     - name: Ubuntu | set fact
-      set_fact:
+      ansible.builtin.set_fact:
         named_conf: /etc/bind/named.conf
         named_conf_options: /etc/bind/named.conf.options
         named_conf_local: /etc/bind/named.conf.local
@@ -12,7 +12,7 @@
         named_user: bind
       when: ansible_distribution == 'Ubuntu'
     - name: RedHat | set fact
-      set_fact:
+      ansible.builtin.set_fact:
         named_conf: /var/named/chroot/etc/named.conf
         named_conf_options: /var/named/chroot/etc/named.conf.options
         named_conf_local: /var/named/chroot/etc/named.conf.local
@@ -21,35 +21,35 @@
       when: ansible_os_family == "RedHat"
   tasks:
     - name: Get named.conf stat
-      stat:
+      ansible.builtin.stat:
         path: "{{ named_conf }}"
       register: cfg
     - name: Validate named.conf present
-      assert:
+      ansible.builtin.assert:
         that: cfg.stat.exists and cfg.stat.size != 0
     - name: Get named.conf.options stat
-      stat:
+      ansible.builtin.stat:
         path: "{{ named_conf_options }}"
       register: cfg2
     - name: Validate named.conf.options present
-      assert:
+      ansible.builtin.assert:
         that: cfg2.stat.exists and cfg2.stat.size != 0
       when: ansible_distribution == 'Ubuntu'
     - name: Get named.conf.local stat
-      stat:
+      ansible.builtin.stat:
         path: "{{ named_conf_local }}"
       register: cfg3
     - name: Validate named.conf.local present
-      assert:
+      ansible.builtin.assert:
         that: cfg3.stat.exists and cfg3.stat.size != 0
 
     - name: Debian | named-checkconf
-      command: named-checkconf -pxzj /etc/bind/named.conf
+      ansible.builtin.command: named-checkconf -pxzj /etc/bind/named.conf
       register: checkconf
       changed_when: false
       failed_when: false
     - name: Validate checkconf output
-      assert:
+      ansible.builtin.assert:
         that: >
           "'file not found' not in checkconf.stdout
            or 'bad zone' not in checkconf.stdout
@@ -58,12 +58,12 @@
       when: ansible_distribution == 'Ubuntu'
 
     - name: RedHat | named-checkconf
-      command: named-checkconf -pzj -t /var/named/chroot/ /etc/named.conf
+      ansible.builtin.command: named-checkconf -pzj -t /var/named/chroot/ /etc/named.conf
       register: checkconf
       changed_when: false
       failed_when: false
     - name: Validate checkconf output
-      assert:
+      ansible.builtin.assert:
         that: >
           "'file not found' not in checkconf.stdout
            or 'bad zone' not in checkconf.stdout
@@ -72,19 +72,19 @@
       when: ansible_os_family == "RedHat"
 
     - name: Ensure named process is running
-      command: "pgrep -u {{ named_user }} {{ named_process }}"
+      ansible.builtin.command: "pgrep -u {{ named_user }} {{ named_process }}"
       register: ps
       changed_when: false
       failed_when: false
     - name: Validate named ps output
-      assert:
+      ansible.builtin.assert:
         that: ps.stdout
       when: >
         not (ansible_virtualization_type is defined and
               (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
           )
     - name: Ensure domain port is listening
-      wait_for:
+      ansible.builtin.wait_for:
         host: localhost
         port: 53
         timeout: 5
@@ -94,31 +94,31 @@
           )
 
     - name: host www.google.com
-      command: host www.google.com
+      ansible.builtin.command: host www.google.com
       register: host1
       changed_when: false
       failed_when: false
     - name: Validate host output
-      assert:
+      ansible.builtin.assert:
         that: >
           "'www.google.com has address ' in host1.stdout"
 
     - name: dig bind version
-      command: dig @127.0.0.1 -c CH -t txt version.bind
+      ansible.builtin.command: dig @127.0.0.1 -c CH -t txt version.bind
       register: dig1
       changed_when: false
       failed_when: false
     - name: Validate dig output
-      assert:
+      ansible.builtin.assert:
         that: >
           "'Don't know...' in dig1.stdout"
 
     - name: named -V
-      command: named -V
+      ansible.builtin.command: named -V
       register: named1
       changed_when: false
       failed_when: false
     - name: Validate named -V output
-      assert:
+      ansible.builtin.assert:
         that: >
           "'linked to OpenSSL version:' in named1.stdout"
