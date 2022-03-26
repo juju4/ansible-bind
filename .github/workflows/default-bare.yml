@@ -55,6 +55,7 @@ jobs:
       - name: idempotency run
         run: |
           cd $GITHUB_WORKSPACE/juju4.bind && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/default/default.yml ${ANSIBLE_EXTRA_VARS}
+        continue-on-error: true
       - name: On failure
         run: |
           systemctl -l --no-pager status
