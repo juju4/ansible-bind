@@ -23,7 +23,8 @@
   notify:
     - restart bind
 
-- block:
+- name: Bind Zones
+  block:
     - include_tasks: zones.yml
       vars:
         zone: "{{ outer_item }}"

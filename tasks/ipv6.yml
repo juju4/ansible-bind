@@ -1,6 +1,7 @@
 ---
 
-- block:
+- name: Debian
+  block:
     - name: Check if /etc/default/bind9
       ansible.builtin.stat:
         path: /etc/default/bind9
@@ -16,7 +17,8 @@
       when: default.stat.exists
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- block:
+- name: RedHat
+  block:
     - name: redhat | disable ipv6
       ansible.builtin.replace:
         dest: /etc/sysconfig/named
