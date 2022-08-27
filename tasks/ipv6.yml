@@ -13,7 +13,7 @@
         replace: 'OPTIONS="-4 -u bind'
         backup: yes
       notify:
-        - restart bind
+        - Restart bind
       when: default.stat.exists
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
@@ -26,5 +26,5 @@
         replace: 'OPTIONS="-4"'
         backup: yes
       notify:
-        - restart bind
+        - Restart bind
   when: ansible_os_family == "RedHat"
