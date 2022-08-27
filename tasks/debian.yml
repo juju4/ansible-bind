@@ -1,6 +1,6 @@
 ---
 
-- name: apt | Install bind9
+- name: Debian | Install bind9
   ansible.builtin.apt: name={{ bind_pkgs }} state=present update_cache=yes
   register: pkg_result
   until: pkg_result is success

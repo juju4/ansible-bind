@@ -1,24 +1,24 @@
 ---
 
-- name: add local rpz zone
+- name: Add local rpz zone
   ansible.builtin.template:
     src: named-local-rpz.conf.j2
     dest: "{{ bind_etc }}/named-local-rpz.conf"
     mode: 0644
 
-- name: add local rpz zone
+- name: Add local rpz zone
   ansible.builtin.template:
     src: "{{ bind_rpz_blocklist_template }}"
     dest: "{{ bind_etc }}/local.rpz.zone"
     mode: 0644
 
-- name: add local whitelist rpz zone
+- name: Add local whitelist rpz zone
   ansible.builtin.template:
     src: "{{ bind_rpz_whitelist_template }}"
     dest: "{{ bind_etc }}/local-whitelist.rpz.zone"
     mode: 0644
 
-- name: add rpz response policy in local configuration
+- name: Add rpz response policy in local configuration
   ansible.builtin.blockinfile:
     dest: "{{ bind_etc }}/named.conf.local"
     marker: '// {mark} ANSIBLE MANAGED BLOCK: rpz zone'
@@ -35,7 +35,7 @@
        //include "{{ bind_etc }}/named-spamhaus-rpz.conf";
 
   notify:
-    - restart bind
+    - Restart bind
 
 # https://github.com/benjimons/sinkholeupdate, python script ?
 # http://handlers.dshield.org/gbruneau/sinkhole.htm, shell script?

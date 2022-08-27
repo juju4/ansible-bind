@@ -15,7 +15,7 @@
   with_items:
     - "{{ zone.vars.bind_zone_name }}"
   notify:
-    - restart bind
+    - Restart bind
 
 - name: Create reverse zone files
   ansible.builtin.template:
@@ -30,11 +30,11 @@
     validate: "named-checkzone {{ item | ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }} %s"
   with_items: "{{ zone.vars.bind_zone_networks }}"
   notify:
-    - restart bind
+    - Restart bind
 
 - name: Debug | var bind_zone_name
   ansible.builtin.debug: var=zone.vars.bind_zone_name
-- name: ensure named.conf.local-zones present
+- name: Ensure named.conf.local-zones present
   ansible.builtin.template:
     src: "named-zones.conf.local.j2"
     dest: "{{ bind_etc }}/named.conf.local-zone-{{ zone.vars.bind_zone_name }}"
@@ -43,9 +43,9 @@
     mode: '0644'
     backup: yes
   notify:
-    - restart bind
+    - Restart bind
 
-- name: add zones to named.conf.local
+- name: Add zones to named.conf.local
   ansible.builtin.blockinfile:
     dest: "{{ bind_etc }}/named.conf.local"
     marker: "// {mark} ANSIBLE MANAGED BLOCK zone {{ zone.vars.bind_zone_name }}"
@@ -56,4 +56,4 @@
     create: yes
     mode: '0644'
   notify:
-    - restart bind
+    - Restart bind

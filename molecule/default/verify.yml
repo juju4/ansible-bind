@@ -93,7 +93,7 @@
               (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
           )
 
-    - name: host www.google.com
+    - name: Host www.google.com
       ansible.builtin.command: host www.google.com
       register: host1
       changed_when: false
@@ -103,7 +103,7 @@
         that: >
           "'www.google.com has address ' in host1.stdout"
 
-    - name: dig bind version
+    - name: Dig bind version
       ansible.builtin.command: dig @127.0.0.1 -c CH -t txt version.bind
       register: dig1
       changed_when: false
@@ -113,7 +113,7 @@
         that: >
           "'Don't know...' in dig1.stdout"
 
-    - name: named -V
+    - name: Named version
       ansible.builtin.command: named -V
       register: named1
       changed_when: false

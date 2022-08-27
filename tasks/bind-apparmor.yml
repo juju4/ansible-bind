@@ -1,6 +1,6 @@
 ---
 
-- name: ubuntu | add few options to apparmor
+- name: Ubuntu | add few options to apparmor
   ansible.builtin.lineinfile:
     dest: /etc/apparmor.d/usr.sbin.named
     regexp: "{{ item.re }}"
@@ -11,4 +11,4 @@
     - { re: '^  /var/log/bind/ rw,', l: '  /var/log/bind/ rw,', i: '^  /var/log/named/ rw,' }
     - { re: '^  /var/log/bind/\*\* rw,', l: '  /var/log/bind/** rw,', i: '^  /var/log/named/ rw,' }
   notify:
-    - reload apparmor bind
+    - Reload apparmor bind

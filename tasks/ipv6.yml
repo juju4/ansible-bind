@@ -6,7 +6,7 @@
       ansible.builtin.stat:
         path: /etc/default/bind9
       register: default
-    - name: debian | disable ipv6
+    - name: Debian | disable ipv6
       ansible.builtin.replace:
         dest: /etc/default/bind9
         regexp: '^OPTIONS="-u bind'
@@ -19,7 +19,7 @@
 
 - name: RedHat
   block:
-    - name: redhat | disable ipv6
+    - name: Redhat | disable ipv6
       ansible.builtin.replace:
         dest: /etc/sysconfig/named
         regexp: '^OPTIONS=""'

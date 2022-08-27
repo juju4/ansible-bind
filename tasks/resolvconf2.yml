@@ -1,7 +1,7 @@
 ---
 
 ## To ensure dnssec/zones tests always succeed, resolv.conf should only contain localhost...
-- name: debian | ensure /etc/resolv.conf as only localhost resolver
+- name: Debian | ensure /etc/resolv.conf as only localhost resolver
   ansible.builtin.replace:
     dest: /etc/resolv.conf
     regexp: 'nameserver .*'

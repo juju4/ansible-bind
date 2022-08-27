@@ -1,19 +1,19 @@
 ---
 
-- name: install misp update script
+- name: Install misp update script
   ansible.builtin.template:
     src: misp-bind-rpz-fetch.sh.j2
     dest: /usr/local/bin/misp-bind-rpz-fetch.sh
     ## contains MISP api key!!!
     mode: '0700'
 
-- name: run misp-bind-rpz-fetch.sh once
+- name: Run misp-bind-rpz-fetch.sh once
   ansible.builtin.command: "/usr/local/bin/misp-bind-rpz-fetch.sh"
   args:
     creates: "{{ bind_etc }}/misp.rpz"
   failed_when: false
 
-- name: check rpz retrieve is correct
+- name: Check rpz retrieve is correct
   ansible.builtin.command: "head -1 {{ bind_etc }}/misp.rpz"
   register: misprpz
   changed_when: false

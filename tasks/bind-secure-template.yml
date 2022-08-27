@@ -2,10 +2,10 @@
 ## http://www.cymru.com/Documents/secure-bind-template.html
 ## FIXME! views not implemented
 
-- name: ensure log directory exists
+- name: Ensure log directory exists
   ansible.builtin.file: dest="{{ bind_log }}" state=directory mode=0755 owner="{{ bind_user }}"
 
-- name: ensure good secure settings in local configuration
+- name: Ensure good secure settings in local configuration
   ansible.builtin.blockinfile:
     dest: "{{ bind_etc }}/named.conf.local"
     marker: '// {mark} ANSIBLE MANAGED BLOCK: team-cymru template'
@@ -79,4 +79,4 @@
     mode: '0644'
     group: "{{ bind_user }}"
   notify:
-    - restart bind
+    - Restart bind

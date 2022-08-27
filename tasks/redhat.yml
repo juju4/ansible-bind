@@ -2,13 +2,13 @@
 ## for haveged (better entropy for gpg)
 # - import_tasks: redhat-epel.yml
 
-- name: yum | Install bind
+- name: Redhat | Install bind
   ansible.builtin.yum: name={{ bind_pkgs }} state=present update_cache=yes
   register: pkg_result
   until: pkg_result is success
 
 ## necessary for 'named-checkconf -t /var/named/chroot/ /etc/named.conf'
-- name: yum | copy file in chroot
+- name: Redhat | copy file in chroot
   ansible.builtin.copy: "src={{ item.s }} dest={{ item.d }} remote_src=yes mode=0640 group={{ bind_user }}"
   with_items:
     - { s: /etc/named.rfc1912.zones, d: "{{ bind_etc }}/named.rfc1912.zones" }
@@ -19,16 +19,16 @@
     - { s: /var/named/named.loopback, d: /var/named/chroot/var/named }
     - { s: /var/named/named.empty, d: /var/named/chroot/var/named }
 
-- name: ensure conf working in/out of chroot
+- name: Ensure conf working in/out of chroot
   ansible.builtin.file: src=/ dest=/var/named/chroot/var/named/chroot state=link
 
-- name: ensure named-chroot required directories exist
+- name: Ensure named-chroot required directories exist
   ansible.builtin.file: dest={{ item }} state=directory owner=named group=named mode=0755
   with_items:
     - /var/named/chroot/var/named/dynamic
     - /var/named/chroot/var/named/data
 
-- name: ensure named service is disable - using named-chroot
+- name: Ensure named service is disable - using named-chroot
   ansible.builtin.service: name=named state=stopped enabled=no
   when: >
     not (ansible_virtualization_type is defined and
@@ -40,7 +40,7 @@
 # - name: create entropy source inside chroot to avoid warning
 #   command: "mknod /var/named/chroot/dev/random c 1 8 creates=/var/named/chroot/dev/random"
 
-- name: redhat | update default configuration
+- name: Redhat | update default configuration
   ansible.builtin.template:
     src: named-rhel.conf.j2
     dest: "{{ bind_etc }}/named.conf"
@@ -49,4 +49,4 @@
     group: "{{ bind_user }}"
     backup: yes
   notify:
-    - restart bind
+    - Restart bind
