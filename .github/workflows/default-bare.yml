@@ -92,6 +92,18 @@ jobs:
         continue-on-error: true
       - name: After script - etc
         run: |
+          set -x
           ls -la /etc/bind9/
+          ls -la /etc/named/
+          sudo cat /etc/named/named.conf
+          sudo cat /etc/named/named.conf.local
+          sudo cat /etc/named/named.conf.options
+        if: ${{ always() }}
+        continue-on-error: true
+      - name: After script - logs
+        run: |
+          set -x
+          ls -la /var/log/named/
+          sudo tail -100 /var/log/named/*
         if: ${{ always() }}
         continue-on-error: true
