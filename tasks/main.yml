@@ -55,7 +55,7 @@
   ansible.builtin.import_tasks: misp-integration.yml
   when: bind_misp_apikey and bind_misp_url
 
-## Centos7: cant replace named.conf when named-chroot active
+## Centos7: can't replace named.conf when named-chroot active
 - name: Import peerdns
   ansible.builtin.import_tasks: peerdns.yml
   when: ansible_os_family == "RedHat"
