@@ -5,7 +5,9 @@
   register: pkg_result
   until: pkg_result is success
 
-- import_tasks: bind-apparmor.yml
+- name: Import bind-apparmor
+  ansible.builtin.import_tasks: bind-apparmor.yml
 
-- import_tasks: resolvconf.yml
+- name: Import resolvconf
+  ansible.builtin.import_tasks: resolvconf.yml
   when: not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")

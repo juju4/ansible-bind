@@ -7,10 +7,12 @@
   ansible.builtin.include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
   when: ansible_os_family == "RedHat"
 
-- import_tasks: debian.yml
+- name: Import debian
+  ansible.builtin.import_tasks: debian.yml
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- import_tasks: redhat.yml
+- name: Import redhat
+  ansible.builtin.import_tasks: redhat.yml
   when: ansible_os_family == "RedHat"
 
 - name: Install new named.conf options with dnssec
@@ -25,7 +27,8 @@
 
 - name: Bind Zones
   block:
-    - include_tasks: zones.yml
+    - name: Include zones
+      ansible.builtin.include_tasks: zones.yml
       vars:
         zone: "{{ outer_item }}"
       with_items: "{{ bind_zones }}"
@@ -33,30 +36,38 @@
         loop_var: outer_item
   when: bind_zones != []
 
-- import_tasks: bind-secure-template.yml
+- name: Import bind-secure-template
+  ansible.builtin.import_tasks: bind-secure-template.yml
 
-- import_tasks: ipv6.yml
+- name: Import ipv6
+  ansible.builtin.import_tasks: ipv6.yml
   when: bind_disable_ipv6 is defined and bind_disable_ipv6
 
-- import_tasks: bind-rpz.yml
+- name: Import bind-rpz
+  ansible.builtin.import_tasks: bind-rpz.yml
   when: bind_rpz is defined and bind_rpz
 
-- import_tasks: bind-blackhole-malwaredomainslist.yml
+- name: Import bind-blackhole-malwaredomainslist
+  ansible.builtin.import_tasks: bind-blackhole-malwaredomainslist.yml
   when: bind_malwaredomainslist_blackhole is defined and bind_malwaredomainslist_blackhole
 
-- import_tasks: misp-integration.yml
+- name: Import misp-integration
+  ansible.builtin.import_tasks: misp-integration.yml
   when: bind_misp_apikey and bind_misp_url
 
 ## Centos7: cant replace named.conf when named-chroot active
-- import_tasks: peerdns.yml
+- name: Import peerdns
+  ansible.builtin.import_tasks: peerdns.yml
   when: ansible_os_family == "RedHat"
 
 # - meta: flush_handlers
 ## should be at the end, else can lose dns connectivity
-- import_tasks: resolvconf2.yml
+- name: Import resolvconf2
+  ansible.builtin.import_tasks: resolvconf2.yml
   when: not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")
 
-- import_tasks: monitoring-nrpe.yml
+- name: Import monitoring-nrpe
+  ansible.builtin.import_tasks: monitoring-nrpe.yml
   when: bind_monitoring_nrpe is defined and bind_monitoring_nrpe
 
 - name: Ensure bind is running and enabled on boot.
