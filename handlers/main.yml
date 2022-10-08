@@ -1,21 +1,27 @@
 ---
 
 - name: Restart bind
-  ansible.builtin.service: name={{ bind_svc }} state=restarted
+  ansible.builtin.service:
+    name: "{{ bind_svc }}"
+    state: restarted
   when: >
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
         )
 
 - name: Restart resolvconf
-  ansible.builtin.service: name=resolvconf state=restarted
+  ansible.builtin.service:
+    name: resolvconf
+    state: restarted
   when: >
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
         )
 
 - name: Restart networking
-  ansible.builtin.service: name=networking state=restarted
+  ansible.builtin.service:
+    name: networking
+    state: restarted
   when: >
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")

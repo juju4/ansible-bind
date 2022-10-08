@@ -1,23 +1,27 @@
 ---
 
 - name: Debug | var ansible_all_ipv4_addresses
-  ansible.builtin.debug: var=ansible_all_ipv4_addresses
+  ansible.builtin.debug:
+    var: ansible_all_ipv4_addresses
 - name: Check network config
   ansible.builtin.command: "ifconfig -a"
   register: ifconfig
   changed_when: false
 - name: Debug | var ifconfig
-  ansible.builtin.debug: var=ifconfig.stdout_lines
+  ansible.builtin.debug:
+    var: ifconfig.stdout_lines
 - name: Redhat | check network config 2
   ansible.builtin.command: "ls -al /etc/sysconfig/network-scripts/"
   register: netdir
   changed_when: false
   failed_when: false
 - name: Debug | var network-scripts
-  ansible.builtin.debug: var=netdir.stdout_lines
+  ansible.builtin.debug:
+    var: netdir.stdout_lines
 
 - name: Check if file exists
-  ansible.builtin.stat: path=/etc/sysconfig/network-scripts/ifcfg-eth0
+  ansible.builtin.stat:
+    path: /etc/sysconfig/network-scripts/ifcfg-eth0
   register: ifcfg
 - name: Redhat | ensure ifcfg-eth0 has localhost resolver
   ansible.builtin.blockinfile:
@@ -31,14 +35,17 @@
   when: ifcfg.stat.exists
 
 - name: Redhat | ensure bind active
-  ansible.builtin.service: name={{ bind_svc }} state=started
+  ansible.builtin.service:
+    name: "{{ bind_svc }}"
+    state: started
   when: >
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
         )
 
 - name: Check if file exists
-  ansible.builtin.stat: path=/etc/resolv.conf
+  ansible.builtin.stat:
+    path: /etc/resolv.conf
   register: resolvconf
 - name: Redhat | direct change of /etc/resolv.conf to avoid restarting network
   ansible.builtin.lineinfile:

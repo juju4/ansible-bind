@@ -19,12 +19,17 @@
   changed_when: false
   failed_when: false
 - name: Debug | error notification
-  ansible.builtin.debug: msg="Error in MISP RPZ fetch! need to check MISP user account matching the key!"
+  ansible.builtin.debug:
+    msg: "Error in MISP RPZ fetch! need to check MISP user account matching the key!"
   when: >
     'Your user account is expecting a password change' in misprpz.stdout or
     'Invalid event ID format' in misprpz.stdout
 
 - name: Add misp2bind cron job
-  ansible.builtin.cron: name="misp2bind refresh" minute=12 hour=12
-    user="root" job="/usr/local/bin/misp-bind-rpz-fetch.sh"
-    cron_file=ansible_misp2bind-refresh
+  ansible.builtin.cron:
+    name: "misp2bind refresh"
+    minute: 12
+    hour: 12
+    user: "root"
+    job: "/usr/local/bin/misp-bind-rpz-fetch.sh"
+    cron_file: ansible_misp2bind-refresh

@@ -3,7 +3,11 @@
 ## FIXME! views not implemented
 
 - name: Ensure log directory exists
-  ansible.builtin.file: dest="{{ bind_log }}" state=directory mode=0755 owner="{{ bind_user }}"
+  ansible.builtin.file:
+    dest: "{{ bind_log }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ bind_user }}"
 
 - name: Ensure good secure settings in local configuration
   ansible.builtin.blockinfile:

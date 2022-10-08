@@ -1,7 +1,8 @@
 ---
 
 - name: Check if file exists
-  ansible.builtin.stat: path=/etc/resolvconf/resolv.conf.d/head
+  ansible.builtin.stat:
+    path: /etc/resolvconf/resolv.conf.d/head
   register: resolvconfhead
 
 ## FIXME! lineinfile module exception on xenial/travis:
@@ -15,7 +16,8 @@
   when: resolvconfhead.stat.exists and ansible_env['TRAVIS'] is not defined
 
 - name: Check if dhclient.conf present
-  ansible.builtin.stat: path=/etc/dhcp/dhclient.conf
+  ansible.builtin.stat:
+    path: /etc/dhcp/dhclient.conf
   register: dhclient
 
 - name: Debian | ignore dns from dhcp server

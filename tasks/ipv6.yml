@@ -1,6 +1,7 @@
 ---
 
 - name: Debian
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   block:
     - name: Check if /etc/default/bind9
       ansible.builtin.stat:
@@ -15,9 +16,9 @@
       notify:
         - Restart bind
       when: default.stat.exists
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: RedHat
+  when: ansible_os_family == "RedHat"
   block:
     - name: Redhat | disable ipv6
       ansible.builtin.replace:
@@ -27,4 +28,3 @@
         backup: yes
       notify:
         - Restart bind
-  when: ansible_os_family == "RedHat"

@@ -26,6 +26,7 @@
     - Restart bind
 
 - name: Bind Zones
+  when: bind_zones != []
   block:
     - name: Include zones
       ansible.builtin.include_tasks: zones.yml
@@ -34,7 +35,6 @@
       with_items: "{{ bind_zones }}"
       loop_control:
         loop_var: outer_item
-  when: bind_zones != []
 
 - name: Import bind-secure-template
   ansible.builtin.import_tasks: bind-secure-template.yml
@@ -71,7 +71,10 @@
   when: bind_monitoring_nrpe is defined and bind_monitoring_nrpe
 
 - name: Ensure bind is running and enabled on boot.
-  ansible.builtin.service: name={{ bind_svc }} state=started enabled=yes
+  ansible.builtin.service:
+    name: "{{ bind_svc }}"
+    state: started
+    enabled: yes
   when: >
     not (ansible_virtualization_type is defined and
           (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
