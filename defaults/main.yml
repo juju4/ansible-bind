@@ -82,4 +82,4 @@ bind_zones: []
 #       - bind_zone_services: []
 #       - bind_zone_text: []
 
-bind_monitoring_nrpe: true
+bind_monitoring_nrpe: false
