@@ -3,8 +3,8 @@
 ; vi: ft=bindzone
 
 $TTL {{ zone.vars.bind_zone_ttl }}
-; item: {{ item }}, revdns {{ item | ipaddr('revdns') }}, revdns+regex {{ item | ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}
-$ORIGIN {{ item | ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}
+; item: {{ item }}, revdns {{ item | ansible.utils.ipaddr('revdns') }}, revdns+regex {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}
+$ORIGIN {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}
 
 {% if zone.vars.bind_zone_name_servers|length > 0 %}
 @ IN SOA {{ zone.vars.bind_zone_name_servers|first }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (

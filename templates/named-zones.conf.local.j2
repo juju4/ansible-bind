@@ -13,9 +13,9 @@ zone "{{ zone.vars.bind_zone_name }}" IN {
 
 {% if zone.vars.bind_zone_networks is defined %}
 {% for network in zone.vars.bind_zone_networks %}
-zone "{{ network  | ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}" IN {
+zone "{{ network  | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}" IN {
   type master;
-  file "{{ bind_etc }}/db.rev.{{ network | ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}zone";
+  file "{{ bind_etc }}/db.rev.{{ network | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}zone";
   notify yes;
 {% if zone.vars.bind_zone_also_notify|length > 0 %}
   also-notify  { {{ zone.vars.bind_zone_also_notify|join('; ') }}; };
