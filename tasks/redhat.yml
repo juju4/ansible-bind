@@ -3,7 +3,7 @@
 # - import_tasks: redhat-epel.yml
 
 - name: Redhat | Install bind
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: "{{ bind_pkgs }}"
     state: present
     update_cache: yes
