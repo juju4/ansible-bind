@@ -10,7 +10,7 @@
         named_conf_local: /etc/bind/named.conf.local
         named_process: named
         named_user: bind
-      when: ansible_distribution == 'Ubuntu'
+      when: ansible_os_family == 'Debian'
     - name: RedHat | set fact
       ansible.builtin.set_fact:
         named_conf: /var/named/chroot/etc/named.conf
