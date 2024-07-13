@@ -4,8 +4,8 @@
   ansible.builtin.include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
   when: ansible_distribution == 'Ubuntu'
 - name: Include version-specific variables for RedHat
-  ansible.builtin.include_vars: "RedHat-{{ ansible_distribution_version.split('.')[0] }}.yml"
-  when: ansible_os_family == "RedHat"
+  ansible.builtin.include_vars: "RedHat-{{ ansible_distribution_major_version }}.yml"
+  when: ansible_os_family == "RedHat" or ansible_distribution == 'Debian'
 
 - name: Import debian
   ansible.builtin.import_tasks: debian.yml
