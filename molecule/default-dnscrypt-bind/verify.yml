@@ -1,7 +1,7 @@
 ---
 
 - name: Verify
-  hosts: bind
+  hosts: all
   pre_tasks:
     - name: Ubuntu | set fact
       ansible.builtin.set_fact:
