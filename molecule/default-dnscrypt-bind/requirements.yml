@@ -1,0 +1,6 @@
+---
+
+roles:
+  - name: juju4.dnscryptproxy
+    src: https://github.com/juju4/ansible-dnscrypt-proxy/
+    version: main
