@@ -186,6 +186,6 @@ jobs:
           set -x
           sudo cat /opt/dnscrypt-proxy2/linux-x86_64/forwarding-rules.txt || true
           ls -l /var/log/dnscrypt*.log || true
-          sudo tail -100 /var/log/dnscrypt*.log || true
+          sudo tail -n100 /var/log/dnscrypt*.log || true
         if: ${{ always() }}
         continue-on-error: true
