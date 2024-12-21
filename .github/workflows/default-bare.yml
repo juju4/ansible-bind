@@ -73,6 +73,7 @@ jobs:
           pwd
           env
           find -ls
+          cat /etc/systemd/resolved.conf
       - name: run test
         run: |
           cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE && ansible-playbook -i localhost, --connection=local --become -vvv molecule/$ANSIBLE_SUITE/converge.yml ${ANSIBLE_EXTRA_VARS}
@@ -98,6 +99,7 @@ jobs:
           ip addr
           cat /etc/hosts
           cat /etc/resolv.conf
+          cat /etc/systemd/resolved.conf
           host www.google.com
           ping -c 1 www.google.com || true
           ping -c 1 8.8.8.8 || true
