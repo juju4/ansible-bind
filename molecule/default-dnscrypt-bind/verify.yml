@@ -20,7 +20,7 @@
         named_user: named
       when: ansible_os_family == "RedHat"
   vars:
-    dns_check:
+    dns_checks:
       - name: ns
         ip: 192.168.1.1
       - name: host2
