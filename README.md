@@ -25,6 +25,8 @@ For internal domains, be aware:
 It was tested on the following versions:
  * 2.10-17
 
+Python module netaddr must be present to create reverse zones.
+
 ### Operating systems
 
 Tested on Ubuntu 24.04 (bind 9.18.28), 22.04 (9.18.1) and centos/rockylinux 9 (9.16.23).
