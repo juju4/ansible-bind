@@ -67,8 +67,8 @@ jobs:
           echo "/opt/hostedtoolcache/Python/3.9.1/x64/bin" >> $GITHUB_PATH
           ansible --version
           cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE
-          [ -f molecule/$ANSIBLE_SUITE/requirements.yml ] && ansible-galaxy install -r molecule/$ANSIBLE_SUITE/requirements.yml
-          [ -f get-dependencies.sh ] && sh -x get-dependencies.sh
+          [ -f molecule/$ANSIBLE_SUITE/requirements.yml ] && ansible-galaxy install -r molecule/$ANSIBLE_SUITE/requirements.yml || true
+          [ -f get-dependencies.sh ] && sh -x get-dependencies.sh || true
           { echo '[defaults]'; echo 'callbacks_enabled = profile_tasks, timer'; echo 'roles_path = ../'; echo 'ansible_python_interpreter: /usr/bin/python3'; } >> ansible.cfg
       - name: Environment
         run: |
@@ -121,6 +121,11 @@ jobs:
           systemd-analyze --no-pager security named || true
           systemctl --failed || true
           rsyslogd -v
+        if: ${{ always() }}
+        continue-on-error: true
+      - name: After script - journalctl
+        run: |
+          journalctl -l --no-pager status named || true
         if: ${{ always() }}
         continue-on-error: true
       - name: After script - etc
