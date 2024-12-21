@@ -27,10 +27,14 @@
       when: >
         (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 16) or
         (ansible_os_family == "RedHat" and ansible_distribution_major_version | int >= 8)
+    - name: Check path
+      ansible.builtin.command:
+        cmd: pwd
+      changed_when: false
     - name: Set dnscrypt-forwarding-rules.txt
       ansible.builtin.copy:
         content: "internal 127.0.0.1"
-        dest: templates/dnscrypt-forwarding-rules.txt
+        dest: ../../templates/dnscrypt-forwarding-rules.txt
         mode: '0644'
         remote_src: true
   vars:
