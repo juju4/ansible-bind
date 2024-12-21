@@ -59,6 +59,17 @@
               ip: 192.168.1.2
             - name: host3
               ip: 192.168.1.3
+          bind_zone_hostmaster_email: "hostmaster"
+          bind_zone_ttl: "1W"
+          bind_zone_time_to_refresh: "1D"
+          bind_zone_time_to_retry: "1H"
+          bind_zone_time_to_expire: "1W"
+          bind_zone_minimum_ttl: "1D"
+          bind_zone_name_servers: []
+          bind_other_name_servers: []
+          bind_zone_mail_servers: []
+          bind_zone_services: []
+          bind_zone_text: []
     dnscryptproxyv2_listen: "['127.0.0.2:53']"
     dnscrypt_proxy_files_upload:
       - { s: dnscrypt-forwarding-rules.txt, d: forwarding-rules.txt }
