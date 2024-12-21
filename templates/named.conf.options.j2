@@ -26,7 +26,7 @@ options {
 {% endfor %}
         };
 {% endif %}
-{% if bind_dns_forward_only %}
+{% if bind_dns_forward_only and bind_dns_forwarders | length > 0 %}
         forward only;
 {% endif %}
 
