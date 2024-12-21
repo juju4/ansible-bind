@@ -88,3 +88,5 @@ bind_zones: []
 #       - bind_zone_text: []
 
 bind_monitoring_nrpe: false
+
+is_container: false

@@ -49,10 +49,8 @@
     name: named
     state: stopped
     enabled: no
-  when: >
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
-        )
+  when:
+    - not is_container
 
 ## http://kb.odin.com/en/120844
 ## mknod: ‘/var/named/chroot/dev/random’: Operation not permitted

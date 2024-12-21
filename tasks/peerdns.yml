@@ -38,10 +38,8 @@
   ansible.builtin.service:
     name: "{{ bind_svc }}"
     state: started
-  when: >
-    not (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
-        )
+  when:
+    - not is_container
 
 - name: Check if file exists
   ansible.builtin.stat:
