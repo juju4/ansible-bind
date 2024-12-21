@@ -141,8 +141,8 @@
     - name: Validate internal DNS zone
       ansible.builtin.assert:
         that: >
-          "item.name in item.stdout"
-      loop: "{{ dig_bind }}"
+          "item.ip in item.stdout"
+      loop: "{{ dig_bind.results }}"
 
     - name: Get internal DNS rev zone queries
       ansible.builtin.command:
@@ -154,5 +154,5 @@
     - name: Validate internal DNS rev zone
       ansible.builtin.assert:
         that: >
-          "item.ip in item.stdout"
-      loop: "{{ dig_bindrev }}"
+          "item.name in item.stdout"
+      loop: "{{ dig_bindrev.results }}"
