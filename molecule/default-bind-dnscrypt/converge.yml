@@ -70,7 +70,22 @@
     dnscrypt_proxy_config:
       - { section: 'query_log', option: 'file', value: '/var/log/dnscrypt-proxy2-query.log' }
       - { section: 'nx_log', option: 'file', value: '/var/log/dnscrypt-proxy2-nx.log' }
-    dnscrypt_set_nameserver: 127.0.0.1
+    # Setup dnscrypt-proxy first as resolves Internet but don't point on bind until setup done
+    # dnscrypt_set_nameserver: 127.0.0.1
+    dnscrypt_set_nameserver2: 127.0.0.1
   roles:
-    - juju4.bind
     - juju4.dnscryptproxy
+    - juju4.bind
+  tasks:
+    - name: Update systemd-resolved configuration to use target resolver
+      ansible.builtin.lineinfile:
+        dest: /etc/systemd/resolved.conf
+        regexp: "{{ item.re }}"
+        line: "{{ item.l }}"
+        mode: '0644'
+        backup: yes
+      with_items:
+        - { re: '^DNS=.*', l: 'DNS={{ dnscrypt_set_nameserver2 }}' }
+        - { re: '^Domains=.*', l: 'Domains=~.' }
+      notify:
+        - Restart systemd-resolved
