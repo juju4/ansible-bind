@@ -10,76 +10,9 @@
     owner: "{{ bind_user }}"
 
 - name: Ensure good secure settings in local configuration
-  ansible.builtin.blockinfile:
+  ansible.builtin.template:
+    src: "named.conf.local.j2"
     dest: "{{ bind_etc }}/named.conf.local"
-    marker: '// {mark} ANSIBLE MANAGED BLOCK: team-cymru template'
-    block: |
-
-       acl xfer {
-           none;   // Allow no transfers.  If we have other
-            // name servers, place them here.
-
-       };
-
-       acl "trusted" {
-           // Place our internal and DMZ subnets in here so that
-           // intranet and DMZ clients may send DNS queries.  This
-           // also prevents outside hosts from using our name server
-           // as a resolver for other domains.
-           127.0.0.0/8;
-           192.168.0.0/16;
-           172.16.0.0/12;
-           10.0.0.0/8;
-           ::1;
-           localhost;
-       };
-
-       logging {
-
-           channel default_syslog {
-               syslog local2;
-               severity debug;
-           };
-
-           channel default_namedlog {
-               file "{{ bind_log }}/named.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
-               severity debug;
-           };
-
-           channel audit_log {
-               file "{{ bind_log }}/security.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
-               severity debug;
-               print-time yes;
-           };
-
-           channel requests_log {
-               file "{{ bind_log }}/requests.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
-               severity info;
-           };
-
-           channel named-rpz {
-               file "{{ bind_log }}/rpz.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
-               severity info;
-           };
-
-           category default { default_namedlog; };
-           category general { default_namedlog; };
-           //category security { audit_log; default_syslog; };
-           category security { audit_log; };
-           category config { default_namedlog; };
-           category resolver { requests_log; };
-           category xfer-in { audit_log; };
-           category xfer-out { audit_log; };
-           category notify { audit_log; };
-           category client { audit_log; };
-           category network { audit_log; };
-           category update { audit_log; };
-           category queries { requests_log; };
-           category lame-servers { audit_log; };
-           category rpz { named-rpz; };
-       };
-
-    create: yes
     mode: '0644'
     group: "{{ bind_user }}"
   notify:

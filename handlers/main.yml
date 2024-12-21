@@ -30,4 +30,3 @@
 
 - name: Reload apparmor bind  # noqa no-changed-when
   ansible.builtin.command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"
-  failed_when: false

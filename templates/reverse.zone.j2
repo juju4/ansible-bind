@@ -1,9 +1,10 @@
 {{ ansible_managed | comment(decoration="; ") }}
 ; Reverse zone file for {{ zone.vars.bind_zone_name }}
 ; vi: ft=bindzone
+{% set subnet_short = item | regex_replace('\/[0-9]*$', '') | regex_replace('\\.0$', '') %}
 
 $TTL {{ zone.vars.bind_zone_ttl }}
-; item: {{ item }}, revdns {{ item | ansible.utils.ipaddr('revdns') }}, revdns+regex {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}
+; item: {{ item }}, revdns {{ item | ansible.utils.ipaddr('revdns') }}, revdns+regex {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}, subnet_short {{ subnet_short }}
 $ORIGIN {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '') }}
 
 {% if zone.vars.bind_zone_name_servers|length > 0 %}
@@ -33,19 +34,19 @@ $ORIGIN {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '
 {% if host.ip == item %}
 @ IN  PTR  {{ host.name }}.{{ zone.vars.bind_zone_name }}.
 {% else %}
-{% if host.ip is string and host.ip.startswith(item) %}
+{% if host.ip is string and host.ip.startswith(subnet_short) %}
 {% if host.name == '@' %}
-{{ ('.'.join(host.ip.replace(item+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ zone.vars.bind_zone_name }}.
+{{ ('.'.join(host.ip.replace(subnet_short+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ zone.vars.bind_zone_name }}.
 {% else %}
-{{ ('.'.join(host.ip.replace(item+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ host.name }}.{{ zone.vars.bind_zone_name }}.
+{{ ('.'.join(host.ip.replace(subnet_short+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ host.name }}.{{ zone.vars.bind_zone_name }}.
 {% endif %}
 {% else %}
 {% for ip in host.ip %}
-{% if ip.startswith(item) %}
-{{ ('.'.join(ip.replace(item+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ zone.vars.bind_zone_name }}.
+{% if ip.startswith(subnet_short) %}
+{{ ('.'.join(ip.replace(subnet_short+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ zone.vars.bind_zone_name }}.
 {% if host.name == '@' %}
 {% else %}
-{{ ('.'.join(ip.replace(item+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ host.name }}.{{ zone.vars.bind_zone_name }}.
+{{ ('.'.join(ip.replace(subnet_short+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ host.name }}.{{ zone.vars.bind_zone_name }}.
 {% endif %}
 {% endif %}
 {% endfor %}
@@ -53,7 +54,7 @@ $ORIGIN {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '
 {% endif %}
 {% endfor %}
 {% else %}
-{{ ('.'.join(ansible_default_ipv4.address.replace(item+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}.
+{{ ('.'.join(ansible_default_ipv4.address.replace(subnet_short+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}.
 {% endif %}
 {# vim: ft=text
 #}

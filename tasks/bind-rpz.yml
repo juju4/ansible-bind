@@ -18,25 +18,6 @@
     dest: "{{ bind_etc }}/local-whitelist.rpz.zone"
     mode: '0644'
 
-- name: Add rpz response policy in local configuration
-  ansible.builtin.blockinfile:
-    dest: "{{ bind_etc }}/named.conf.local"
-    marker: '// {mark} ANSIBLE MANAGED BLOCK: rpz zone'
-    block: |
-       acl clients {
-           127.0.0.0/8;
-           192.168.0.0/16;
-           172.16.0.0/12;
-           10.0.0.0/8;
-           ::1;
-       };
-       include "{{ bind_etc }}/named-local-rpz.conf";
-       // paid service
-       //include "{{ bind_etc }}/named-spamhaus-rpz.conf";
-
-  notify:
-    - Restart bind
-
 # https://github.com/benjimons/sinkholeupdate, python script ?
 # http://handlers.dshield.org/gbruneau/sinkhole.htm, shell script?
 # http://www.malwaredomains.com/?page_id=66

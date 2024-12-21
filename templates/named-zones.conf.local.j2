@@ -2,13 +2,19 @@
 // zones files
 
 zone "{{ zone.vars.bind_zone_name }}" IN {
-  type master;
+  type {{ zone.vars.bind_zone_type | default('master') }};
+{% if zone.vars.bind_zone_type == 'secondary' %}
+  primaries { {{ zone.vars.bind_zone_secondary_primaryip }}; };
+  // path required by AppArmor - https://help.ubuntu.com/community/BIND9ServerHowto#Secondary_Master_Server_configuration
+  file "/var/cache/bind/db.{{ zone.vars.bind_zone_name }}.zone";
+{% else %}
   file "{{ bind_etc }}/db.{{ zone.vars.bind_zone_name }}.zone";
+  allow-update { none; };
+{% endif %}
   notify yes;
 {% if zone.vars.bind_zone_also_notify|length > 0 %}
   also-notify  { {{ zone.vars.bind_zone_also_notify|join('; ') }}; };
 {% endif %}
-  allow-update { none; };
 };
 
 {% if zone.vars.bind_zone_networks is defined %}

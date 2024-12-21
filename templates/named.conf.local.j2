@@ -1,0 +1,95 @@
+{{ ansible_managed | comment('c') }}
+
+# team-cymru template
+acl xfer {
+{% if bind_dns_xfer | length > 0 %}
+{% for ip in bind_dns_xfer %}
+    {{ ip }};
+{% endfor %}
+{% else %}
+    none;   // Allow no transfers.
+{% endif %}
+};
+
+acl "trusted" {
+    // Place our internal and DMZ subnets in here so that
+    // intranet and DMZ clients may send DNS queries.  This
+    // also prevents outside hosts from using our name server
+    // as a resolver for other domains.
+    127.0.0.0/8;
+    192.168.0.0/16;
+    172.16.0.0/12;
+    10.0.0.0/8;
+    ::1;
+    localhost;
+};
+
+logging {
+
+    channel default_syslog {
+        syslog local2;
+        severity debug;
+    };
+
+    channel default_namedlog {
+        file "{{ bind_log }}/named.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
+        severity debug;
+    };
+
+    channel audit_log {
+        file "{{ bind_log }}/security.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
+        severity debug;
+        print-time yes;
+    };
+
+    channel requests_log {
+        file "{{ bind_log }}/requests.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
+        severity info;
+    };
+
+    channel named-rpz {
+        file "{{ bind_log }}/rpz.log" versions {{ bind_logging_versions }} size {{ bind_logging_size }};
+        severity info;
+    };
+
+    category default { default_namedlog; };
+    category general { default_namedlog; };
+    //category security { audit_log; default_syslog; };
+    category security { audit_log; };
+    category config { default_namedlog; };
+    category resolver { requests_log; };
+    category xfer-in { audit_log; };
+    category xfer-out { audit_log; };
+    category notify { audit_log; };
+    category client { audit_log; };
+    category network { audit_log; };
+    category update { audit_log; };
+    category queries { requests_log; };
+    category lame-servers { audit_log; };
+    category rpz { named-rpz; };
+};
+
+{% for zone in bind_zones %}
+// zone {{ zone.vars.bind_zone_name }}
+include "{{ bind_etc }}/named.conf.local-zone-{{ zone.vars.bind_zone_name }}";
+
+{% endfor %}
+{% if bind_rpz is defined and bind_rpz %}
+// rpz zone
+acl clients {
+    127.0.0.0/8;
+    192.168.0.0/16;
+    172.16.0.0/12;
+    10.0.0.0/8;
+    ::1;
+};
+include "{{ bind_etc }}/named-local-rpz.conf";
+// paid service
+//include "{{ bind_etc }}/named-spamhaus-rpz.conf";
+
+{% endif %}
+{% if bind_malwaredomainslist_blackhole is defined and bind_malwaredomainslist_blackhole %}
+// malware domains list
+include "{{ bind_etc }}/spywaredomains.zones";
+
+{% endif %}

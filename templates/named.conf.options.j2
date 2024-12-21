@@ -40,6 +40,7 @@ options {
         dnssec-validation {{ bind_dnssec_validation | lower }};
 
         auth-nxdomain no;    # conform to RFC1035
+        recursion {{ bind_recursion_enable | ternary('yes', 'no') }};
 
         listen-on port 53 {
 {% for ip in bind_listen_ipv4 %}
@@ -70,7 +71,6 @@ options {
            reduce such attack surface
         */
 {# FIXME! probably better to disable if server is external/opened #}
-        recursion yes;
 
         /* Path to ISC DLV key */
         bindkeys-file "/etc/named.iscdlv.key";

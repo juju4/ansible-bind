@@ -16,6 +16,8 @@
     - "{{ zone.vars.bind_zone_name }}"
   notify:
     - Restart bind
+  when:
+    - zone.vars.bind_zone_type != 'secondary'
 
 - name: Create reverse zone files
   ansible.builtin.template:
@@ -31,6 +33,8 @@
   with_items: "{{ zone.vars.bind_zone_networks }}"
   notify:
     - Restart bind
+  when:
+    - zone.vars.bind_zone_type != 'secondary'
 
 - name: Debug | var bind_zone_name
   ansible.builtin.debug:
@@ -43,18 +47,5 @@
     group: "{{ bind_user }}"
     mode: '0644'
     backup: yes
-  notify:
-    - Restart bind
-
-- name: Add zones to named.conf.local
-  ansible.builtin.blockinfile:
-    dest: "{{ bind_etc }}/named.conf.local"
-    marker: "// {mark} ANSIBLE MANAGED BLOCK zone {{ zone.vars.bind_zone_name }}"
-    block: |
-
-       include "{{ bind_etc }}/named.conf.local-zone-{{ zone.vars.bind_zone_name }}";
-
-    create: yes
-    mode: '0644'
   notify:
     - Restart bind

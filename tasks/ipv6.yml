@@ -3,15 +3,15 @@
 - name: Debian
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   block:
-    - name: Check if /etc/default/bind9
+    - name: Check if /etc/default/named
       ansible.builtin.stat:
-        path: /etc/default/bind9
+        path: /etc/default/named
       register: default
     - name: Debian | disable ipv6
       ansible.builtin.replace:
-        dest: /etc/default/bind9
-        regexp: '^OPTIONS="-u bind'
-        replace: 'OPTIONS="-4 -u bind'
+        dest: /etc/default/named
+        regexp: '^OPTIONS="-([a-z ].*)"'
+        replace: 'OPTIONS="-4 -\1"'
         backup: yes
       notify:
         - Restart bind

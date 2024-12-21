@@ -9,6 +9,8 @@ bind_listen_ipv6:
 
 bind_dns_forwarders: [ '8.8.8.8', '8.8.4.4' ]
 bind_dns_forward_only: true
+bind_dns_forward_default: false
+bind_dns_xfer: []
 
 bind_dnssec_validation: 'yes'
 # bind_dnssec_validation: auto
@@ -16,6 +18,7 @@ bind_nameservers: []
 bind_dns_authoritative: true
 
 bind_authoritative_domain: example.com
+bind_recursion_enable: true
 
 bind_logging_versions: 5
 bind_logging_size: 25m
@@ -60,8 +63,10 @@ bind_zones: []
 #   - zone: 'local'
 #     vars:
 #       - bind_zone_name: 'local'
+#       - bind_zone_type: 'master'  # or primary, secondary
+#       - bind_zone_secondary_primaryip: '192.168.0.1'  # if secondary, primary IP
 #       - bind_zone_networks:
-#           - "192.168.1"
+#           - "192.168.1.0/24"
 #       - bind_zone_also_notify: []
 #       - bind_zone_hosts:
 #           - name: alpha

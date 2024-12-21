@@ -29,7 +29,8 @@
     - Restart bind
 
 - name: Bind Zones
-  when: bind_zones != []
+  when:
+    - bind_zones != []
   block:
     - name: Include zones
       ansible.builtin.include_tasks: zones.yml
@@ -41,6 +42,19 @@
 
 - name: Import bind-secure-template
   ansible.builtin.import_tasks: bind-secure-template.yml
+
+#  https://unix.stackexchange.com/questions/633561/bind-forwarding-zone-does-not-work-when-allow-recursive-not-allowed
+#  Note: disable external dns resolution and no forwarding at all even if configured
+- name: Remove root servers hints to disable default resolution
+  ansible.builtin.replace:  # noqa no-tabs
+    path: /etc/bind/named.conf.default-zones
+    regexp: '^	file "/usr/share/dns/root.hints";'
+    replace: '	//file "/usr/share/dns/root.hints";\n	file "/dev/null";'
+    mode: '0644'
+  notify:
+    - Restart bind
+  when:
+    - bind_dns_forward_default | bool
 
 - name: Import ipv6
   ansible.builtin.import_tasks: ipv6.yml
@@ -72,6 +86,11 @@
 - name: Import monitoring-nrpe
   ansible.builtin.import_tasks: monitoring-nrpe.yml
   when: bind_monitoring_nrpe is defined and bind_monitoring_nrpe
+
+- name: Final configuration validation
+  ansible.builtin.command:
+    cmd: named-checkconf
+  changed_when: false
 
 - name: Ensure bind is running and enabled on boot.
   ansible.builtin.service:
