@@ -10,7 +10,8 @@ permissions: {}
 
 jobs:
   build:
-
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -19,6 +20,7 @@ jobs:
       ANSIBLE_CALLBACKS_ENABLED: profile_tasks
       ANSIBLE_EXTRA_VARS: ""
       ANSIBLE_ROLE: juju4.bind
+      ANSIBLE_SUITE: default-bind-dnscrypt
 
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +43,7 @@ jobs:
           ansible --version
           cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE
           [ -f get-dependencies.sh ] && sh -x get-dependencies.sh
-          [ -f molecule/default/requirements.yml ] && ansible-galaxy install -r molecule/default/requirements.yml
+          [ -f molecule/$ANSIBLE_SUITE/requirements.yml ] && ansible-galaxy install -r molecule/$ANSIBLE_SUITE/requirements.yml
           { echo '[defaults]'; echo 'callbacks_enabled = profile_tasks, timer'; echo 'roles_path = ../'; echo 'ansible_python_interpreter: /usr/bin/python3'; } >> ansible.cfg
       - name: Fetch central settings repository
         run: |
