@@ -1,0 +1,63 @@
+---
+
+- name: Converge
+  hosts: all
+  environment:
+    http_proxy: "{{ lookup('env', 'http_proxy') }}"
+    https_proxy: "{{ lookup('env', 'https_proxy') }}"
+    no_proxy: "{{ lookup('env', 'no_proxy') }}"
+  remote_user: root
+  pre_tasks:
+    - name: Ubuntu | Install python3
+      ansible.builtin.raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3-minimal)
+      register: python3
+      changed_when: "'installed' in python3.stdout"
+      when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 16)
+    - name: RedHat | Install python3
+      ansible.builtin.raw: test -e /usr/bin/python3 || (yum install -y python3)
+      register: python3
+      changed_when: "'installed' in python3.stdout"
+      when: (ansible_os_family == "RedHat" and ansible_distribution_major_version | int >= 8)
+    - name: Gather Facts
+      ansible.builtin.setup:
+      when: (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 16)
+    - name: Ubuntu Bionic+, Redhat 8+ | Enforce python3 for ansible
+      ansible.builtin.set_fact:
+        ansible_python_interpreter: /usr/bin/python3
+      when: >
+        (ansible_distribution == "Ubuntu" and ansible_distribution_major_version | int >= 16) or
+        (ansible_os_family == "RedHat" and ansible_distribution_major_version | int >= 8)
+  vars:
+    bind_resolvconf_update_failedwhen: false
+    bind_malwaredomainslist_blackhole: false
+    bind_listen_ipv4: [ '127.0.0.1' ]
+    bind_dns_forwarders: [ '127.0.0.2' ]
+    bind_zones:
+      - zone: internal
+        vars:
+          bind_zone_name: 'internal'
+          bind_zone_type: 'primary'
+          bind_zone_networks:
+            - "192.168.1.0/24"
+          bind_zone_also_notify: []
+          bind_zone_hosts:
+            - name: '@'
+              ip:
+                - 192.168.1.1
+              aliases:
+                - smtp
+                - mail
+            - name: ns
+              ip: 192.168.1.1
+            - name: host2
+              ip: 192.168.1.2
+            - name: host3
+              ip: 192.168.1.3
+    dnscryptproxyv2_listen: "['127.0.0.2:53']"
+    dnscrypt_proxy_config:
+      - { section: 'query_log', option: 'file', value: '/var/log/dnscrypt-proxy2-query.log' }
+      - { section: 'nx_log', option: 'file', value: '/var/log/dnscrypt-proxy2-nx.log' }
+    dnscrypt_set_nameserver: 127.0.0.1
+  roles:
+    - juju4.bind
+    - juju4.dnscryptproxy
