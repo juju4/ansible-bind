@@ -166,10 +166,10 @@ jobs:
         run: |
           set -x
           ls -la /var/log/named/ || true
-          sudo tail -100 /var/log/named/*
+          sudo tail -100 /var/log/named/* || true
           ls -la /var/log/bind/ || true
-          sudo tail -100 /var/log/bind/*
-          sudo tail -100 /var/log/syslog
+          sudo tail -100 /var/log/bind/* || true
+          sudo tail -100 /var/log/syslog || true
         if: ${{ always() }}
         continue-on-error: true
       - name: After script - apparmor
