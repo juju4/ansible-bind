@@ -21,20 +21,28 @@ jobs:
       max-parallel: 4
       matrix:
         include:
-          - os: ubuntu-24.04
-            experimental: true
-          - os: ubuntu-22.04
-            experimental: true
-          - os: ubuntu-20.04
+          - distribution: ubuntu
+            version: '24.04'
+            suite: default
+            experimental: false
+          - distribution: ubuntu
+            version: '22.04'
+            suite: default
+            experimental: false
+          - distribution: ubuntu
+            version: '20.04'
+            suite: default
             experimental: false
     env:
       ANSIBLE_CALLBACKS_ENABLED: profile_tasks
       ANSIBLE_EXTRA_VARS: ""
+      ANSIBLE_ROLE: juju4.bind
+      ANSIBLE_SUITE: ${{ matrix.suite }}
 
     steps:
       - uses: actions/checkout@v4
         with:
-          path: juju4.bind
+          path: ${{ env.ANSIBLE_ROLE }}
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -50,7 +58,8 @@ jobs:
           ls -l /opt/hostedtoolcache/Python/3.9.1/x64/bin || true
           echo "/opt/hostedtoolcache/Python/3.9.1/x64/bin" >> $GITHUB_PATH
           ansible --version
-          cd $GITHUB_WORKSPACE/juju4.bind
+          cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE
+          [ -f molecule/$ANSIBLE_SUITE/requirements.yml ] && ansible-galaxy install -r molecule/$ANSIBLE_SUITE/requirements.yml
           [ -f get-dependencies.sh ] && sh -x get-dependencies.sh
           { echo '[defaults]'; echo 'callbacks_enabled = profile_tasks, timer'; echo 'roles_path = ../'; echo 'ansible_python_interpreter: /usr/bin/python3'; } >> ansible.cfg
       - name: Environment
@@ -61,7 +70,16 @@ jobs:
           find -ls
       - name: run test
         run: |
-          cd $GITHUB_WORKSPACE/juju4.bind && ansible-playbook -i localhost, --connection=local --become -vvv test/integration/default/default.yml ${ANSIBLE_EXTRA_VARS}
+          cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE && ansible-playbook -i localhost, --connection=local --become -vvv molecule/$ANSIBLE_SUITE/converge.yml ${ANSIBLE_EXTRA_VARS}
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+      - name: idempotency run
+        run: |
+          cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE && ansible-playbook -i localhost, --connection=local --become -vvv molecule/$ANSIBLE_SUITE/converge.yml ${ANSIBLE_EXTRA_VARS} | tee /tmp/idempotency.log | grep -q 'changed=0.*failed=0'  && (echo 'Idempotence test: pass' && exit 0)  || (echo 'Idempotence test: fail' && cat /tmp/idempotency.log && exit 0)
+      - name: verify
+        run: |
+          cd $GITHUB_WORKSPACE/$ANSIBLE_ROLE && ansible-playbook -i localhost, --connection=local --become -vvv molecule/$ANSIBLE_SUITE/verify.yml ${ANSIBLE_EXTRA_VARS}
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
@@ -73,6 +91,7 @@ jobs:
           pip freeze
           pip3 freeze
           ip addr
+          cat /etc/hosts
           cat /etc/resolv.conf
           host www.google.com
           ping -c 1 www.google.com || true
@@ -87,8 +106,10 @@ jobs:
       - name: After script - systemd
         run: |
           systemctl -l --no-pager status bind9 || true
+          systemctl -l --no-pager status bind || true
           systemctl -l --no-pager status named || true
           systemd-analyze --no-pager security || true
+          systemd-analyze --no-pager security named || true
           systemctl --failed || true
           rsyslogd -v
         if: ${{ always() }}
@@ -96,17 +117,54 @@ jobs:
       - name: After script - etc
         run: |
           set -x
-          ls -la /etc/bind9/
-          ls -la /etc/named/
-          sudo cat /etc/named/named.conf
-          sudo cat /etc/named/named.conf.local
-          sudo cat /etc/named/named.conf.options
+          ls -la /etc/bind9/ || true
+          ls -la /etc/bind/ || true
+          ls -la /etc/named/ || true
+          sudo cat /etc/named/named.conf || true
+          sudo cat /etc/named/named.conf.local || true
+          sudo cat /etc/named/named.conf.options || true
+          sudo cat /etc/bind/named.conf || true
+          sudo cat /etc/bind/named.conf.local || true
+          sudo cat /etc/bind/named.conf.options || true
+          sudo named-checkconf -pxzj /etc/bind/named.conf || true
+        if: ${{ always() }}
+        continue-on-error: true
+      - name: After script - dig
+        run: |
+          set -x
+          dig @127.0.0.1 -c CH -t txt version.bind
+          dig_args="+noall +question +answer"
+          for ns in 127.0.0.1 127.0.0.2; do
+            echo "== ns: ${ns}"
+            dig ${dig_args} @${ns} www.google.com
+            dig ${dig_args} @${ns} archive.ubuntu.com
+            dig ${dig_args} @${ns} download.falco.org
+            dig ${dig_args} @${ns} apt.grafana.com
+            dig ${dig_args} @${ns} artifacts.elastic.co
+            dig ${dig_args} @${ns} ns.internal
+            dig ${dig_args} @${ns} mail.internal
+            dig ${dig_args} @${ns} host2.internal
+            dig ${dig_args} @${ns} 192.168.1.1
+            dig ${dig_args} @${ns} 192.168.1.2
+            dig ${dig_args} @${ns} 192.168.1.3
+          done
+          dig +trace download.falco.org
         if: ${{ always() }}
         continue-on-error: true
       - name: After script - logs
         run: |
           set -x
-          ls -la /var/log/named/
+          ls -la /var/log/named/ || true
           sudo tail -100 /var/log/named/*
+          ls -la /var/log/bind/ || true
+          sudo tail -100 /var/log/bind/*
+          sudo tail -100 /var/log/syslog
+        if: ${{ always() }}
+        continue-on-error: true
+      - name: After script - apparmor
+        run: |
+          set -x
+          find /etc/apparmor.d/ -iname '*named*' -ls
+          cat /etc/apparmor.d/usr.sbin.named
         if: ${{ always() }}
         continue-on-error: true
