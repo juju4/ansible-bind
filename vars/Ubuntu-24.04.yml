@@ -11,6 +11,7 @@ bind_pkgs:
   - wget
   - unzip
   # - resolvconf
+  - apparmor
 
 bind_svc: bind9
 bind_user: bind
