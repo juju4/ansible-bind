@@ -33,8 +33,10 @@
       changed_when: false
     - name: Set dnscrypt-forwarding-rules.txt
       ansible.builtin.copy:
-        content: "internal 127.0.0.1"
-        dest: ../../templates/dnscrypt-forwarding-rules.txt
+        content: |
+          internal 127.0.0.1
+          1.168.192.in-addr.arpa 127.0.0.1
+        dest: ../../files/dnscrypt-forwarding-rules.txt
         mode: '0644'
         remote_src: true
   vars:
@@ -82,7 +84,7 @@
     dnscrypt_proxy_config:
       - { section: 'query_log', option: 'file', value: '/var/log/dnscrypt-proxy2-query.log' }
       - { section: 'nx_log', option: 'file', value: '/var/log/dnscrypt-proxy2-nx.log' }
-      - { section: '', option: 'forwarding_rules', value: 'forwarding-rules.txt' }
+      - { section: '', option: 'forwarding_rules', value: '/opt/dnscrypt-proxy2/linux-x86_64/forwarding-rules.txt' }
   roles:
     - juju4.bind
     - juju4.dnscryptproxy
