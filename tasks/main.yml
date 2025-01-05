@@ -92,7 +92,9 @@
 ## should be at the end, else can lose dns connectivity
 - name: Import resolvconf2
   ansible.builtin.import_tasks: resolvconf2.yml
-  when: not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")
+  when:
+    - not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")
+    - bind_set_nameserver_enable | bool
 
 - name: Import monitoring-nrpe
   ansible.builtin.import_tasks: monitoring-nrpe.yml

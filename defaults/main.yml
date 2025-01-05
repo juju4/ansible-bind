@@ -7,6 +7,8 @@ bind_listen_ipv4:
 bind_listen_ipv6:
   - ::1
 
+bind_set_nameserver_enable: false
+
 bind_dns_forwarders: [ '8.8.8.8', '8.8.4.4' ]
 bind_dns_forward_only: true
 bind_dns_forward_default: false
