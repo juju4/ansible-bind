@@ -1,0 +1,17 @@
+---
+
+- name: Ensure override folder exists
+  ansible.builtin.file:
+    dest: /etc/systemd/system/named.service.d
+    state: directory
+    mode: '0755'
+
+# if issue, check /var/log/audit/audit.log
+- name: Review named systemd options
+  ansible.builtin.template:
+    src: systemd-override.conf.j2
+    dest: /etc/systemd/system/named.service.d/override.conf
+    mode: '0644'
+  notify:
+    - Reload systemd
+    - Restart bind
