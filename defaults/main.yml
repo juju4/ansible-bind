@@ -89,4 +89,6 @@ bind_zones: []
 
 bind_monitoring_nrpe: false
 
+named_cgroups_restriction_enable: true
+
 is_container: false

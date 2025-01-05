@@ -1,5 +1,13 @@
 ---
 
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
+  become: yes
+  become_user: root
+  when:
+    - not is_container | bool
+
 - name: Reload apparmor bind  # noqa no-changed-when
   ansible.builtin.command: "apparmor_parser -r /etc/apparmor.d/usr.sbin.named"
   when:

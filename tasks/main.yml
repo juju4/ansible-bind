@@ -103,6 +103,9 @@
     cmd: named-checkconf
   changed_when: false
 
+- name: Import systemd
+  ansible.builtin.import_tasks: systemd.yml
+
 - name: Ensure bind is running and enabled on boot.
   ansible.builtin.service:
     name: "{{ bind_svc }}"
