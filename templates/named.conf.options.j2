@@ -138,3 +138,11 @@ options {
 {% endif %}
 
 };
+
+{% if bind_exporter_metrics_enable | bool %}
+// https://kb.isc.org/docs/monitoring-recommendations-for-bind-9#bind-9-http-statistics-channel
+// https://kb.isc.org/docs/aa-00769
+statistics-channels {
+        inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
+};
+{% endif %}
