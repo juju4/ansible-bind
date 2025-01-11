@@ -44,6 +44,13 @@
         dest: ../../files/dnscrypt-forwarding-rules.txt
         mode: '0644'
         remote_src: true
+    - name: Ensure file exists
+      ansible.builtin.command:
+        cmd: "{{ item }}"
+      loop:
+        - pwd
+        - ls -l ../../files/
+      changed_when: false
   vars:
     bind_resolvconf_update_failedwhen: false
     bind_malwaredomainslist_blackhole: false
