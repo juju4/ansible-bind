@@ -41,7 +41,7 @@
         content: |
           internal 127.0.0.1
           1.168.192.in-addr.arpa 127.0.0.1
-        dest: ../../files/dnscrypt-forwarding-rules.txt
+        dest: ../../../juju4.dnscryptproxy/files/dnscrypt-forwarding-rules.txt
         mode: '0644'
         remote_src: true
     - name: Ensure file exists
@@ -49,7 +49,7 @@
         cmd: "{{ item }}"
       loop:
         - pwd
-        - ls -l ../../files/
+        - ls -l ../../files/ ../../../juju4.dnscryptproxy/files/
       changed_when: false
   vars:
     bind_resolvconf_update_failedwhen: false
