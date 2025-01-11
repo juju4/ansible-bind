@@ -33,7 +33,7 @@
       changed_when: false
     - name: Ensure files directory exists
       ansible.builtin.file:
-        path: ../../files
+        path: files
         mode: '0755'
         state: directory
     - name: Set dnscrypt-forwarding-rules.txt
