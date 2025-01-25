@@ -156,3 +156,25 @@
         that: >
           "item.name in item.stdout"
       loop: "{{ dig_bindrev.results }}"
+
+    - name: Check TXT record
+      ansible.builtin.command:
+        cmd: "dig @127.0.0.1 TXT internal."
+      register: dig_txt
+      changed_when: false
+      failed_when: false
+    - name: Validate TXT record
+      ansible.builtin.assert:
+        that: >
+          "'test of TXT entry' in dig_txt.stdout"
+
+    - name: Check CAA record
+      ansible.builtin.command:
+        cmd: "dig @127.0.0.1 CAA internal."
+      register: dig_caa
+      changed_when: false
+      failed_when: false
+    - name: Validate CAA record
+      ansible.builtin.assert:
+        that: >
+          "'letsencrypt.org' in dig_caa.stdout"

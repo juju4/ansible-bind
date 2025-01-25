@@ -65,7 +65,14 @@
           bind_other_name_servers: []
           bind_zone_mail_servers: []
           bind_zone_services: []
-          bind_zone_text: []
+          bind_zone_text:
+            - name: "test"
+              text: "test of TXT entry"
+          bind_zone_caa:
+            - name: "internal."
+              text: "letsencrypt.org"
+              wildcard: false
+              contact: "caa@internal"
     dnscryptproxyv2_listen: "['127.0.0.2:53']"
     dnscrypt_proxy_config:
       - { section: 'query_log', option: 'file', value: '/var/log/dnscrypt-proxy2-query.log' }

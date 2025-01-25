@@ -88,6 +88,7 @@ bind_zones: []
 #       - bind_zone_mail_servers: []
 #       - bind_zone_services: []
 #       - bind_zone_text: []
+#       - bind_zone_caa: []
 
 bind_monitoring_nrpe: false
 bind_exporter_metrics_enable: false
