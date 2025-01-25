@@ -63,6 +63,7 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 {% for text in zone.vars.bind_zone_text %}
 {{ text.name.ljust(20) }} IN  TXT    "{{ text.text }}"
 {% endfor %}
+{% if zone.vars.bind_zone_caa is defined %}
 {% for caa in zone.vars.bind_zone_caa %}
 {{ caa.name.ljust(20) }} CAA    0 issue "{{ caa.text }}"
 {% if caa.wildcard is defined and not caa.wildcard | bool %}
@@ -72,5 +73,6 @@ $TTL {{ zone.vars.bind_zone_ttl }}
                                 0 iodef "mailto:{{ caa.contact }}"
 {% endif %}
 {% endfor %}
+{% endif %}
 {# vim: ft=text
 #}
