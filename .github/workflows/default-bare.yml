@@ -146,6 +146,7 @@ jobs:
         run: |
           set -x
           sudo cat /etc/named/db.* || true
+          sudo cat /etc/bind/db.* || true
         if: ${{ always() }}
         continue-on-error: true
       - name: After script - dig
