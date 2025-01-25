@@ -67,10 +67,10 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 {% for caa in zone.vars.bind_zone_caa %}
 {{ caa.name.ljust(20) }} CAA    0 issue "{{ caa.text }}"
 {% if caa.wildcard is defined and not caa.wildcard | bool %}
-                                0 issuewild ";"
+{{ caa.name.ljust(20) }} CAA    0 issuewild ";"
 {% endif %}
 {% if caa.contact is defined and caa.contact | length > 0 %}
-                                0 iodef "mailto:{{ caa.contact }}"
+{{ caa.name.ljust(20) }} CAA    0 iodef "mailto:{{ caa.contact }}"
 {% endif %}
 {% endfor %}
 {% endif %}
