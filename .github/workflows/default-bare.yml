@@ -30,10 +30,6 @@ jobs:
             suite: default
             experimental: false
           - distribution: ubuntu
-            version: '20.04'
-            suite: default
-            experimental: false
-          - distribution: ubuntu
             version: '24.04'
             suite: default-bind-dnscrypt
             experimental: false
