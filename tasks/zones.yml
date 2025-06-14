@@ -18,6 +18,7 @@
     - Restart bind
   when:
     - zone.vars.bind_zone_type != 'secondary'
+    - zone.vars.bind_zone_type != 'forward'
 
 - name: Create reverse zone files
   ansible.builtin.template:
@@ -35,6 +36,7 @@
     - Restart bind
   when:
     - zone.vars.bind_zone_type != 'secondary'
+    - zone.vars.bind_zone_type != 'forward'
 
 - name: Debug | var bind_zone_name
   ansible.builtin.debug:
