@@ -56,7 +56,7 @@
       register: checkconf
       changed_when: false
       failed_when: false
-    - name: Validate checkconf output
+    - name: Debian | Validate checkconf output
       ansible.builtin.assert:
         that: >
           "'file not found' not in checkconf.stdout
@@ -70,7 +70,7 @@
       register: checkconf
       changed_when: false
       failed_when: false
-    - name: Validate checkconf output
+    - name: RedHat | Validate checkconf output
       ansible.builtin.assert:
         that: >
           "'file not found' not in checkconf.stdout
