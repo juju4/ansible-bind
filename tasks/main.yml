@@ -57,15 +57,12 @@
 #  https://unix.stackexchange.com/questions/633561/bind-forwarding-zone-does-not-work-when-allow-recursive-not-allowed
 #  Note: disable external dns resolution and no forwarding at all even if configured
 - name: Remove root servers hints to disable default resolution
-  ansible.builtin.replace:  # noqa no-tabs
-    path: /etc/bind/named.conf.default-zones
-    regexp: '^	file "/usr/share/dns/root.hints";'
-    replace: '	//file "/usr/share/dns/root.hints";\n	file "/dev/null";'
+  ansible.builtin.template:
+    src: named.conf.default-zones.j2
+    dest: /etc/bind/named.conf.default-zones
     mode: '0644'
   notify:
     - Restart bind
-  when:
-    - bind_dns_forward_default | bool
 
 - name: Import ipv6
   ansible.builtin.import_tasks: ipv6.yml
