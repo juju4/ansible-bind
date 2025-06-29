@@ -21,6 +21,7 @@ bind_dns_authoritative: true
 
 bind_authoritative_domain: example.com
 bind_recursion_enable: true
+bind_recursion_allowed_sources: ['10.0.0.0/8', '192.168.0.0/16']
 
 bind_logging_versions: 5
 bind_logging_size: 25m

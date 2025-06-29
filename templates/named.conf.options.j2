@@ -41,6 +41,13 @@ options {
 
         auth-nxdomain no;    # conform to RFC1035
         recursion {{ bind_recursion_enable | ternary('yes', 'no') }};
+{% if not bind_recursion_enable | bool and bind_recursion_allowed_sources %}
+        allow-recursion {
+{%     for ip in bind_recursion_allowed_sources %}
+		{{ ip }};
+{%     endfor %}
+        };
+{% endif %}
 
         listen-on port 53 {
 {% for ip in bind_listen_ipv4 %}
