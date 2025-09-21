@@ -119,7 +119,7 @@
     - name: Validate dig output
       ansible.builtin.assert:
         that:
-          - "'Don't know...' in dig1.stdout"
+          - "'Don\\'t know...' in dig1.stdout"
 
     - name: Named version
       ansible.builtin.command: named -V
