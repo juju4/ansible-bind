@@ -58,8 +58,8 @@
       failed_when: false
     - name: Debian | Validate checkconf output
       ansible.builtin.assert:
-        that: >
-          "'file not found' not in checkconf.stdout
+        that:
+          - "'file not found' not in checkconf.stdout
            or 'bad zone' not in checkconf.stdout
            or 'loaded serial' in checkconf.stdout
            or 'options' in checkconf.stdout"
@@ -87,8 +87,8 @@
     - name: Validate named ps output
       ansible.builtin.assert:
         that: ps.stdout
-      when: >
-        not (ansible_virtualization_type is defined and
+      when:
+        - not (ansible_virtualization_type is defined and
               (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
           )
     - name: Ensure domain port is listening
@@ -96,8 +96,8 @@
         host: localhost
         port: 53
         timeout: 5
-      when: >
-        not (ansible_virtualization_type is defined and
+      when:
+        - not (ansible_virtualization_type is defined and
               (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
           )
 
@@ -108,8 +108,8 @@
       failed_when: false
     - name: Validate host output
       ansible.builtin.assert:
-        that: >
-          "'www.google.com has address ' in host1.stdout"
+        that:
+          - "'www.google.com has address ' in host1.stdout"
 
     - name: Dig bind version
       ansible.builtin.command: dig @127.0.0.1 -c CH -t txt version.bind
@@ -118,8 +118,8 @@
       failed_when: false
     - name: Validate dig output
       ansible.builtin.assert:
-        that: >
-          "'Don't know...' in dig1.stdout"
+        that:
+          - "'Don't know...' in dig1.stdout"
 
     - name: Named version
       ansible.builtin.command: named -V
@@ -128,8 +128,8 @@
       failed_when: false
     - name: Validate named -V output
       ansible.builtin.assert:
-        that: >
-          "'linked to OpenSSL version:' in named1.stdout"
+        that:
+          - "'linked to OpenSSL version:' in named1.stdout"
 
     - name: Get internal DNS zone queries
       ansible.builtin.command:
@@ -140,8 +140,8 @@
       loop: "{{ dns_checks }}"
     - name: Validate internal DNS zone
       ansible.builtin.assert:
-        that: >
-          "item.ip in item.stdout"
+        that:
+          - "item.ip in item.stdout"
       loop: "{{ dig_bind.results }}"
 
     - name: Get internal DNS rev zone queries
@@ -153,6 +153,6 @@
       loop: "{{ dns_checks }}"
     - name: Validate internal DNS rev zone
       ansible.builtin.assert:
-        that: >
-          "item.name in item.stdout"
+        that:
+          - "item.name in item.stdout"
       loop: "{{ dig_bindrev.results }}"
