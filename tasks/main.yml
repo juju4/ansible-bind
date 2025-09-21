@@ -80,7 +80,9 @@
 
 - name: Import misp-integration
   ansible.builtin.import_tasks: misp-integration.yml
-  when: bind_misp_apikey and bind_misp_url
+  when:
+    - bind_misp_apikey | length > 0
+    - bind_misp_url | length > 0
 
 ## Centos7: can't replace named.conf when named-chroot active
 - name: Import peerdns
