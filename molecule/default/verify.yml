@@ -2,6 +2,8 @@
 
 - name: Verify
   hosts: all
+  vars:
+    is_container: false
   pre_tasks:
     - name: Ubuntu | set fact
       ansible.builtin.set_fact:
@@ -19,6 +21,16 @@
         named_process: named
         named_user: named
       when: ansible_os_family == "RedHat"
+    - name: Set fact is_container
+      ansible.builtin.set_fact:
+        is_container: true
+      when: >
+        (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "docker"
+           or ansible_virtualization_type == "containerd"
+           or ansible_virtualization_type == "container"
+          )
+        )
   tasks:
     - name: Get named.conf stat
       ansible.builtin.stat:
@@ -80,18 +92,14 @@
       ansible.builtin.assert:
         that: ps.stdout | length > 0
       when:
-        - not (ansible_virtualization_type is defined and
-              (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
-          )
+        - not is_container | bool
     - name: Ensure domain port is listening
       ansible.builtin.wait_for:
         host: localhost
         port: 53
         timeout: 5
       when:
-        - not (ansible_virtualization_type is defined and
-              (ansible_virtualization_type == "docker" or ansible_virtualization_type == "containerd")
-          )
+        - not is_container | bool
 
     - name: Host www.google.com
       ansible.builtin.command: host www.google.com
@@ -112,6 +120,8 @@
       ansible.builtin.assert:
         that:
           - "'Don\\'t know...' in dig1.stdout"
+      when:
+        - not is_container | bool
 
     - name: Named version
       ansible.builtin.command: named -V
