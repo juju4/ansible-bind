@@ -9,6 +9,9 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 {% else %}
 @ IN SOA {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
 {% endif %}
+  ; Serial Alternative:
+  ; * https://mastodon.social/@jpmens/114761717694211280 - 20250929 disappeared...
+  ; * https://unix.stackexchange.com/questions/197988/how-to-increment-serial-number-in-bind9-dns-zone
   {{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ ansible_date_time.hour }}
   {{ zone.vars.bind_zone_time_to_refresh }}
   {{ zone.vars.bind_zone_time_to_retry }}
