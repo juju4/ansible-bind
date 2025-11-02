@@ -1,0 +1,21 @@
+---
+
+bind_pkgs:
+  - bind9
+  - dnsutils
+  # - dnssec-tools
+  - libnet-dns-sec-perl
+  - libmailtools-perl
+  - libcrypt-openssl-random-perl
+  - ldnsutils
+  - wget
+  - unzip
+  # - resolvconf
+  - apparmor
+
+bind_svc: bind9
+bind_user: bind
+bind_etc: /etc/bind
+bind_log: /var/log/bind
+bind_conf: /etc/bind/named.conf
+bind_confoptions: /etc/bind/named.conf.options
