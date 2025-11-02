@@ -37,7 +37,12 @@ options {
         // you will need to update your keys.  See https://www.isc.org/bind-keys
         //========================================================================
         //dnssec-enable yes;
+{% if ansible_distribution == 'Debian' and ansible_distribution_major_version | int >= 13 and bind_dnssec_validation | lower == 'yes' %}
+        // the 'dnssec-validation yes' option requires configured 'trust-anchors'; consider using 'dnssec-validation auto'.
+        dnssec-validation auto;
+{% else %}
         dnssec-validation {{ bind_dnssec_validation | lower }};
+{% endif %}
 
         auth-nxdomain no;    # conform to RFC1035
         recursion {{ bind_recursion_enable | ternary('yes', 'no') }};
