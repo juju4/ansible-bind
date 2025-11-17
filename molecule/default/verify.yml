@@ -76,8 +76,8 @@
       failed_when: false
     - name: RedHat | Validate checkconf output
       ansible.builtin.assert:
-        that: >
-          "'file not found' not in checkconf.stdout
+        that:
+          - "'file not found' not in checkconf.stdout
            or 'bad zone' not in checkconf.stdout
            or 'loaded serial' in checkconf.stdout
            or 'options' in checkconf.stdout"
