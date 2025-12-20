@@ -11,9 +11,9 @@ wget -q -O $out http://malware-domains.com/files/spywaredomains.zones.zip
 [ -f {{ bind_etc }}/spywaredomains.zones ] &&  mv {{ bind_etc }}/spywaredomains.zones {{ bind_etc }}/spywaredomains.zones.0
 [ -s $out ] && unzip -q $out \
 	&& perl -pi -e 's@/etc/namedb@{{ bind_etc }}@;' {{ bind_etc }}/spywaredomains.zones \
-{% if ansible_os_family == "RedHat" %}
+{% if ansible_facts['os_family'] == "RedHat" %}
 	&& named-checkconf -t {{ bind_etc }}/.. /etc/named.conf \
-{# if ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' #}
+{# if ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu' #}
 {% else %}
 	&& named-checkconf {{ bind_etc }}/named.conf \
 {% endif %}

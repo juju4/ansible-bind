@@ -10,7 +10,7 @@ $ORIGIN {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '
 {% if zone.vars.bind_zone_name_servers|length > 0 %}
 @ IN SOA {{ zone.vars.bind_zone_name_servers|first }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
 {% else %}
-@ IN SOA {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
+@ IN SOA {{ ansible_facts['hostname'] }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
 {% endif %}
   {{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ ansible_date_time.hour }}
   {{ zone.vars.bind_zone_time_to_refresh }}
@@ -23,7 +23,7 @@ $ORIGIN {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '
 @         IN  NS   {{ ns }}.{{ zone.vars.bind_zone_name }}.
 {% endfor %}
 {% else %}
-@                     IN  NS     {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}.
+@                     IN  NS     {{ ansible_facts['hostname'] }}.{{ zone.vars.bind_zone_name }}.
 {% endif %}
 {% for ns in zone.vars.bind_other_name_servers %}
 @                     IN  NS     {{ ns }}.
@@ -54,7 +54,7 @@ $ORIGIN {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '
 {% endif %}
 {% endfor %}
 {% else %}
-{{ ('.'.join(ansible_default_ipv4.address.replace(subnet_short+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}.
+{{ ('.'.join(ansible_default_ipv4.address.replace(subnet_short+'.','').split('.')[::-1])).ljust(8) }} IN  PTR  {{ ansible_facts['hostname'] }}.{{ zone.vars.bind_zone_name }}.
 {% endif %}
 {# vim: ft=text
 #}

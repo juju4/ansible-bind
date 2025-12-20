@@ -7,7 +7,7 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 {% if zone.vars.bind_zone_name_servers|length > 0 %}
 @ IN SOA {{ zone.vars.bind_zone_name_servers|first }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
 {% else %}
-@ IN SOA {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
+@ IN SOA {{ ansible_facts['hostname'] }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
 {% endif %}
   ; Serial Alternative:
   ; * https://mastodon.social/@jpmens/114761717694211280 - 20250929 disappeared...
@@ -23,7 +23,7 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 @                    IN  NS     {{ ns }}.{{ zone.vars.bind_zone_name }}.
 {% endfor %}
 {% else %}
-@                    IN  NS     {{ ansible_hostname }}.{{ zone.vars.bind_zone_name }}.
+@                    IN  NS     {{ ansible_facts['hostname'] }}.{{ zone.vars.bind_zone_name }}.
 {% endif %}
 {% for ns in zone.vars.bind_other_name_servers %}
 @                    IN  NS     {{ ns }}.
@@ -58,7 +58,7 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 {% endif %}
 {% endfor %}
 {% else %}
-{{ ansible_hostname.ljust(20) }} IN A     {{ ansible_default_ipv4.address }}
+{{ ansible_facts['hostname'].ljust(20) }} IN A     {{ ansible_default_ipv4.address }}
 {% endif %}
 {% for service in zone.vars.bind_zone_services %}
 {{ service.name.ljust(20) }} IN  SRV    {{ service.priority|default('0') }} {{ service.weight|default('0') }} {{ service.port }} {{ service.target }}

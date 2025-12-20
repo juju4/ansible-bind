@@ -16,7 +16,7 @@ dest={{ bind_etc }}/local-misp.rpz.zone
 [ -f $dest ] && mv $dest $dest.old
 curl -s -X POST -H "Authorization: $userkey" -H 'Content-Type: application/json' -H 'Accept: application/json' -d '{{ bind_misp_rpz_json_req }}' "$misp_base_url/attributes/rpz/download" > $dest
 
-{% if ansible_service_mgr == "systemd" %}
+{% if ansible_facts['service_mgr'] == "systemd" %}
 systemctl restart {{ bind_svc }}
 {% else %}
 service {{ bind_svc }} restart

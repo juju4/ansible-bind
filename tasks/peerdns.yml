@@ -1,8 +1,8 @@
 ---
 
-- name: Debug | var ansible_all_ipv4_addresses
+- name: Debug | var ansible_facts['all_ipv4_addresses']
   ansible.builtin.debug:
-    var: ansible_all_ipv4_addresses
+    var: ansible_facts['all_ipv4_addresses']
 - name: Check network config
   ansible.builtin.command: "ifconfig -a"
   register: ifconfig

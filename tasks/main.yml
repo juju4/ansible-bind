@@ -5,11 +5,11 @@
   vars:
     params:
       files:
-        - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
-        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
-        - '{{ ansible_distribution }}.yml'
-        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
-        - '{{ ansible_os_family }}.yml'
+        - "{{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_version'] }}.yml"
+        - "{{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_major_version'] }}.yml"
+        - "{{ ansible_facts['distribution'] }}.yml"
+        - "{{ ansible_facts['os_family'] }}-{{ ansible_facts['distribution_major_version'] }}.yml"
+        - "{{ ansible_facts['os_family'] }}.yml"
       paths:
         - 'vars'
 
@@ -17,20 +17,20 @@
   ansible.builtin.set_fact:
     is_container: true
   when: >
-    (ansible_virtualization_type is defined and
-      (ansible_virtualization_type == "docker"
-       or ansible_virtualization_type == "containerd"
-       or ansible_virtualization_type == "container"
+    (ansible_facts['virtualization_type'] is defined and
+      (ansible_facts['virtualization_type'] == "docker"
+       or ansible_facts['virtualization_type'] == "containerd"
+       or ansible_facts['virtualization_type'] == "container"
       )
     )
 
 - name: Import debian
   ansible.builtin.import_tasks: debian.yml
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  when: ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu'
 
 - name: Import redhat
   ansible.builtin.import_tasks: redhat.yml
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat"
 
 - name: Install new named.conf options with dnssec
   ansible.builtin.template:
@@ -67,7 +67,7 @@
   notify:
     - Restart bind
   when:
-    - ansible_os_family == "Debian"
+    - ansible_facts['os_family'] == "Debian"
 
 - name: Import ipv6
   ansible.builtin.import_tasks: ipv6.yml
@@ -90,14 +90,14 @@
 ## Centos7: can't replace named.conf when named-chroot active
 - name: Import peerdns
   ansible.builtin.import_tasks: peerdns.yml
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat"
 
 # - meta: flush_handlers
 ## should be at the end, else can lose dns connectivity
 - name: Import resolvconf2
   ansible.builtin.import_tasks: resolvconf2.yml
   when:
-    - not (ansible_virtualization_type is defined and ansible_virtualization_type == "docker")
+    - not (ansible_facts['virtualization_type'] is defined and ansible_facts['virtualization_type'] == "docker")
     - bind_set_nameserver_enable | bool
 
 - name: Import monitoring-nrpe
