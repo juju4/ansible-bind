@@ -13,7 +13,7 @@
     line: 'nameserver 127.0.0.1'
   notify:
     - Restart resolvconf
-  when: resolvconfhead.stat.exists and ansible_env['TRAVIS'] is not defined
+  when: resolvconfhead.stat.exists and ansible_facts['env']['TRAVIS'] is not defined
 
 - name: Check if dhclient.conf present
   ansible.builtin.stat:
@@ -27,4 +27,4 @@
     insertafter: '#supersede'
   notify:
     - Restart networking
-  when: ansible_env['TRAVIS'] is not defined and dhclient.stat.exists
+  when: ansible_facts['env']['TRAVIS'] is not defined and dhclient.stat.exists

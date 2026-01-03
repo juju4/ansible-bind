@@ -12,7 +12,7 @@
         named_conf_local: /etc/bind/named.conf.local
         named_process: named
         named_user: bind
-      when: ansible_os_family == 'Debian'
+      when: ansible_facts['os_family'] == 'Debian'
     - name: RedHat | set fact
       ansible.builtin.set_fact:
         named_conf: /var/named/chroot/etc/named.conf
@@ -20,15 +20,15 @@
         named_conf_local: /var/named/chroot/etc/named.conf.local
         named_process: named
         named_user: named
-      when: ansible_os_family == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
     - name: Set fact is_container
       ansible.builtin.set_fact:
         is_container: true
       when: >
-        (ansible_virtualization_type is defined and
-          (ansible_virtualization_type == "docker"
-           or ansible_virtualization_type == "containerd"
-           or ansible_virtualization_type == "container"
+        (ansible_facts['virtualization_type'] is defined and
+          (ansible_facts['virtualization_type'] == "docker"
+           or ansible_facts['virtualization_type'] == "containerd"
+           or ansible_facts['virtualization_type'] == "container"
           )
         )
   tasks:
@@ -46,7 +46,7 @@
     - name: Validate named.conf.options present
       ansible.builtin.assert:
         that: cfg2.stat.exists and cfg2.stat.size != 0
-      when: ansible_distribution == 'Ubuntu'
+      when: ansible_facts['distribution'] == 'Ubuntu'
     - name: Get named.conf.local stat
       ansible.builtin.stat:
         path: "{{ named_conf_local }}"
@@ -67,7 +67,7 @@
            or 'bad zone' not in checkconf.stdout
            or 'loaded serial' in checkconf.stdout
            or 'options' in checkconf.stdout"
-      when: ansible_distribution == 'Ubuntu'
+      when: ansible_facts['distribution'] == 'Ubuntu'
 
     - name: RedHat | named-checkconf
       ansible.builtin.command: named-checkconf -pzj -t /var/named/chroot/ /etc/named.conf
@@ -81,7 +81,7 @@
            or 'bad zone' not in checkconf.stdout
            or 'loaded serial' in checkconf.stdout
            or 'options' in checkconf.stdout"
-      when: ansible_os_family == "RedHat"
+      when: ansible_facts['os_family'] == "RedHat"
 
     - name: Ensure named process is running
       ansible.builtin.command: "pgrep -u {{ named_user }} {{ named_process }}"

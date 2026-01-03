@@ -12,7 +12,7 @@ $ORIGIN {{ item | ansible.utils.ipaddr('revdns') | regex_replace('^[0-9]+\\.', '
 {% else %}
 @ IN SOA {{ ansible_facts['hostname'] }}.{{ zone.vars.bind_zone_name }}. {{ zone.vars.bind_zone_hostmaster_email }}.{{ zone.vars.bind_zone_name }}. (
 {% endif %}
-  {{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ ansible_date_time.hour }}
+  {{ ansible_facts.date_time.year }}{{ ansible_facts.date_time.month }}{{ ansible_facts.date_time.day }}{{ ansible_facts.date_time.hour }}
   {{ zone.vars.bind_zone_time_to_refresh }}
   {{ zone.vars.bind_zone_time_to_retry }}
   {{ zone.vars.bind_zone_time_to_expire }}
