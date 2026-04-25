@@ -37,7 +37,9 @@ options {
         // you will need to update your keys.  See https://www.isc.org/bind-keys
         //========================================================================
         //dnssec-enable yes;
-{% if ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_major_version'] | int >= 13 and bind_dnssec_validation | lower == 'yes' %}
+{% if (ansible_facts['distribution'] == 'Debian' and ansible_facts['distribution_major_version'] | int >= 13 and bind_dnssec_validation | lower == 'yes') or
+  (ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version'] | int >= 26 and bind_dnssec_validation | lower == 'yes')
+%}
         // the 'dnssec-validation yes' option requires configured 'trust-anchors'; consider using 'dnssec-validation auto'.
         dnssec-validation auto;
 {% else %}
