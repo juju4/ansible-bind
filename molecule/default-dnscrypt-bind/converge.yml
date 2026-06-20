@@ -53,7 +53,6 @@
       changed_when: false
   vars:
     bind_resolvconf_update_failedwhen: false
-    bind_malwaredomainslist_blackhole: false
     bind_listen_ipv4: [ '127.0.0.1' ]
     bind_dns_forwarders: []
     bind_zones:

@@ -9,7 +9,6 @@ Including
 Please note than separated internal/external views are not implemented currently.
 * DNSSEC for authentication,
 * RPZ to whitelist/blacklist entries
-* Malware domains list blackholed
 * Eventual integration with MISP RPZ export
 * Authoritative DNS (mostly for internal zones)
 Mostly as cache/forwarder but could be other roles.

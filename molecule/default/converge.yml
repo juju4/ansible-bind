@@ -29,6 +29,5 @@
         (ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] | int >= 8)
   vars:
     bind_resolvconf_update_failedwhen: false
-    bind_malwaredomainslist_blackhole: false
   roles:
     - juju4.bind

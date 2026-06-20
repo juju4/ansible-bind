@@ -77,10 +77,6 @@
   ansible.builtin.import_tasks: bind-rpz.yml
   when: bind_rpz is defined and bind_rpz
 
-- name: Import bind-blackhole-malwaredomainslist
-  ansible.builtin.import_tasks: bind-blackhole-malwaredomainslist.yml
-  when: bind_malwaredomainslist_blackhole is defined and bind_malwaredomainslist_blackhole
-
 - name: Import misp-integration
   ansible.builtin.import_tasks: misp-integration.yml
   when:

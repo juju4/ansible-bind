@@ -2,7 +2,5 @@
 
 - name: Test integration playbook
   hosts: all
-  vars:
-    bind_malwaredomainslist_blackhole: false
   roles:
     - juju4.bind
