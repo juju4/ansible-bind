@@ -71,6 +71,10 @@ $ MOLECULE_DISTRO=ubuntu:24.04 molecule test --destroy=never
 
 ## Troubleshooting & Known issues
 
+## Resources
+
+* [NIST SP 800-81 Rev. 3 Secure Domain Name System (DNS) Deployment Guide](https://csrc.nist.gov/pubs/sp/800/81/r3/final)
+
 ## License
 
 BSD 2-clause
