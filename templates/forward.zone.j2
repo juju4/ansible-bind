@@ -29,9 +29,13 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 @                    IN  NS     {{ ns }}.
 {% endfor %}
 
-{% for mail in zone.vars.bind_zone_mail_servers %}
-{% if loop.first %}@{% else %} {% endif %}                    IN  MX     {{ mail.preference}}  {{ mail.name }}.{{ zone.vars.bind_zone_name }}.
-{% endfor %}
+{% if bind_nullmx | bool %}
+                     IN MX 0 .
+{% else %}
+{%   for mail in zone.vars.bind_zone_mail_servers %}
+{%     if loop.first %}@{% else %} {% endif %}                    IN  MX     {{ mail.preference}}  {{ mail.name }}.{{ zone.vars.bind_zone_name }}.
+{%   endfor %}
+{% endif %}
 
 {% if zone.vars.bind_zone_hosts|length > 0 %}
 {% for host in zone.vars.bind_zone_hosts %}
@@ -66,6 +70,11 @@ $TTL {{ zone.vars.bind_zone_ttl }}
 {% for text in zone.vars.bind_zone_text %}
 {{ text.name.ljust(20) }} IN  TXT    "{{ text.text }}"
 {% endfor %}
+{% if bind_nullmx | bool %}
+{{ zone.vars.bind_zone_name }}. IN TXT "v=spf1 -all"
+_dmarc.{{ zone.vars.bind_zone_name }} IN TXT "v=dmarc1; p=reject; sp=reject; adkim=s; aspf=s; pct=100; rua=mailto:dmarc-reports@{{ zone.vars.bind_zone_name }}"
+*._domainkey.{{ zone.vars.bind_zone_name }} IN TXT "v=DKIM1; p="
+{% endif %}
 {% if zone.vars.bind_zone_caa is defined %}
 {% for caa in zone.vars.bind_zone_caa %}
 {{ caa.name.ljust(20) }} CAA    0 issue "{{ caa.text }}"

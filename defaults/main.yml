@@ -13,6 +13,8 @@ bind_dns_forwarders: [ '8.8.8.8', '8.8.4.4' ]
 bind_dns_forward_only: true
 bind_dns_forward_default: false
 bind_dns_xfer: []
+# [A "Null MX" No Service Resource Record for Domains That Accept No Mail, RFC7505, Jun 2015](https://www.rfc-editor.org/rfc/rfc7505)
+bind_nullmx: true
 
 bind_dnssec_validation: 'yes'
 # bind_dnssec_validation: auto
